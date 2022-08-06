@@ -2,7 +2,7 @@
 //  MainItemCollectionViewCell.swift
 //  SurfEducationProject
 //
-//  Created by Владислав Климов on 04.08.2022.
+//  Created by Ryzhkov Pavel on 05.08.2022.
 //
 
 import UIKit
