@@ -1,33 +1,23 @@
-//
-//  MainItemCollectionViewCell.swift
-//  SurfEducationProject
-//
-//  Created by Ryzhkov Pavel on 05.08.2022.
-//
 
 import UIKit
 
 class MainItemCollectionViewCell: UICollectionViewCell {
 
     // MARK: - Constants
-
     private enum Constants {
         static let fillHeartImage = UIImage(named: "heart-fill")
         static let heartImage = UIImage(named: "heart")
     }
 
     // MARK: - Views
-
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var favoriteButton: UIButton!
 
     // MARK: - Events
-
     var didFavoritesTapped: (() -> Void)?
 
     // MARK: - Calculated
-
     var buttonImage: UIImage? {
         return isFavorite ? Constants.fillHeartImage : Constants.heartImage
     }
@@ -41,15 +31,17 @@ class MainItemCollectionViewCell: UICollectionViewCell {
     }
 
     // MARK: - Properties
-
     var title: String = "" {
         didSet {
             titleLabel.text = title
         }
     }
-    var image: UIImage? {
+    var imageUrlInString: String = "" {
         didSet {
-            imageView.image = image
+            guard let url = URL(string: imageUrlInString) else {
+                return
+            }
+            imageView.loadImage(from: url)
         }
     }
     var isFavorite: Bool = false {
@@ -59,14 +51,12 @@ class MainItemCollectionViewCell: UICollectionViewCell {
     }
 
     // MARK: - Actions
-
     @IBAction private func favotiteAction(_ sender: UIButton) {
         didFavoritesTapped?()
         isFavorite.toggle()
     }
 
     // MARK: - UICollectionViewCell
-
     override func awakeFromNib() {
         super.awakeFromNib()
         configureAppearance()
@@ -75,7 +65,6 @@ class MainItemCollectionViewCell: UICollectionViewCell {
 }
 
 // MARK: - Private Methods
-
 private extension MainItemCollectionViewCell {
 
     func configureAppearance() {

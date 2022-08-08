@@ -1,27 +1,24 @@
-//
-//  DetailImageTableViewCell.swift
-//  SurfEducationProject
-//
-//  Created by Ryzhkov Pavel on 05.08.2022.
-//
 
 import UIKit
 
 class DetailImageTableViewCell: UITableViewCell {
 
-    // MARK: - Views
+// MARK: - Views
 
     @IBOutlet private weak var cartImageView: UIImageView!
 
-    // MARK: - Properties
+// MARK: - Properties
 
-    var image: UIImage? {
+    var imageUrlInString: String = "" {
         didSet {
-            cartImageView.image = image
+             guard let url = URL(string: imageUrlInString) else {
+                    return
+             }
+            imageView?.loadImage(from: url)
         }
     }
 
-    // MARK: - UITableViewCell
+// MARK: - UITableViewCell
 
     override func awakeFromNib() {
         super.awakeFromNib()

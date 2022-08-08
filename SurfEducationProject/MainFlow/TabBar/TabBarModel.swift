@@ -1,9 +1,4 @@
-//
-//  TabBarModel.swift
-//  SurfEducationProject
-//
-//  Created by Ryzhkov Pavel on 03.08.2022.
-//
+
 
 import Foundation
 import UIKit

@@ -1,24 +1,15 @@
-//
-//  DetailViewController.swift
-//  SurfEducationProject
-//
-//  Created by Ryzhkov Pavel on 05.08.2022.
-//
 
 import UIKit
 
 class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
 
     // MARK: - Views
-
     private let tableView = UITableView()
 
     // MARK: - Properties
-
     var model: DetailItemModel?
 
     // MARK: - UIViewController
-
     override func viewDidLoad() {
         super.viewDidLoad()
         configureAppearance()
@@ -33,7 +24,6 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
 }
 
 // MARK: - Private Methods
-
 private extension DetailViewController {
 
     func configureAppearance() {
@@ -74,7 +64,6 @@ private extension DetailViewController {
 }
 
 // MARK: - UITableViewDataSource
-
 extension DetailViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -86,7 +75,7 @@ extension DetailViewController: UITableViewDataSource {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailImageTableViewCell.self)")
             if let cell = cell as? DetailImageTableViewCell {
-                cell.image = model?.image
+                cell.imageUrlInString = model?.imageUrlInString ?? ""
             }
             return cell ?? UITableViewCell()
         case 1:

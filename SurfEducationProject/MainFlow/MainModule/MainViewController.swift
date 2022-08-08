@@ -1,16 +1,9 @@
-//
-//  MainViewController.swift
-//  SurfEducationProject
-//
-//  Created by  Ryzhkov Pavel on 05.08.2022.
-//
 
 import UIKit
 
 final class MainViewController: UIViewController {
 
     // MARK: - Constants
-
     private enum Constants {
         static let horisontalInset: CGFloat = 16
         static let spaceBetweenElements: CGFloat = 7
@@ -18,27 +11,23 @@ final class MainViewController: UIViewController {
     }
 
     // MARK: - Private Properties
-
     private let model: MainModel = .init()
 
     // MARK: - Views
-
     @IBOutlet private weak var collectionView: UICollectionView!
 
     // MARK: - Lifeсyrcle
-
     override func viewDidLoad() {
         super.viewDidLoad()
         configureApperance()
         configureModel()
-        model.getPosts()
+        model.loadPosts()
         model.items[5].isFavorite = true
     }
 
 }
 
 // MARK: - Private Methods
-
 private extension MainViewController {
 
     func configureApperance() {
@@ -52,14 +41,15 @@ private extension MainViewController {
 
     func configureModel() {
         model.didItemsUpdated = { [weak self] in
-            self?.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+            }
         }
     }
 
 }
 
 // MARK: - UICollection
-
 extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -72,7 +62,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
             let item = model.items[indexPath.row]
             cell.title = item.title
             cell.isFavorite = item.isFavorite
-            cell.image = item.image
+            cell.imageUrlInString = item.imageUrlInString
             cell.didFavoritesTapped = { [weak self] in
                 self?.model.items[indexPath.row].isFavorite.toggle()
             }
