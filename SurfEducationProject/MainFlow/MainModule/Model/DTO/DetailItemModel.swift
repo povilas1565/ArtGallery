@@ -8,6 +8,7 @@ struct DetailItemModel {
     var isFavorite: Bool
     let dateCreation: String
     let content: String
+    let dateCreation: String
 
 // MARK: - Initialization
         internal init(imageUrlInString: String, title: String, isFavorite: Bool, content: String, dateCreation: Date) {
