@@ -1,60 +1,75 @@
 import Foundation
 
-struct ИaseNetworkTask<AbstractInput: Encodable, AbstractOutput: Decodable>: NetworkTask {
+struct BaseNetworkTask<AbstractInput: Encodable, AbstractOutput: Decodable>: NetworkTask {
 
+    //MARK: - NetworkTask
 typealias Input = AbstractInput
 typealias Output = AbstractOutput
 
 var baseUrl: URL? {
-
 URL(string: "https://pictures.chronicker.fun/api")
-let path: String
-let method: NetworkMethod
-let session: URLSession = URLSession(configuration: .default)
-let isNeedInjectToken: Bool
+    }
 
-var tokenStorage: TokenStorage {
+    let path: String
+    let method: NetworkMethod
+    let session: URLSession = URLSession(configuration: .default)
+    let isNeedInjectToken: Bool
+    var urlCache: URLCache {
+             URLCache.shared
+    }
+
+   var tokenStorage: TokenStorage {
        BaseTokenStorage()
 }
 
-// MARK - Initialization
-init(inNeedInjectToken: Bool, method: NetworkMethod, path: String) {
-self.isNeedInjectToken = inNeedInjectToken
-self.path = path
-self.method = method
+    // MARK - Initialization
+    init(inNeedInjectToken: Bool, method: NetworkMethod, path: String) {
+    self.isNeedInjectToken = inNeedInjectToken
+    self.path = path
+    self.method = method
 }
 
-// MARK - NetworkTask
+    // MARK - NetworkTask
 
 func performRequest(
 input: AbstractInput,
-_onResponseWasReceived: (_result: Result<AbstractOutput, Error) -> Void
+_onResponseWasReceived: @escaping (_result: Result<AbstractOutput, Error>) -> Void
 ) {
     do {
         let request = try getRequest(with: input)
-        session.dataTask(with: request) { data, response, error in
-              if let error = error {
-                   onResponseWasReceived(.failure(error))
-              } else if let data = data {
-                   do {
-                       let mappedModel = try JSONDecoder().decode(AbstractOutput.self), from: data)
-                       onResponseWasReceived(.success(mappedModel))}
-                   } catch {
-                       onResponseWasReceived(.failure(error)
+
+        if let cachedResponse = getCachedResponseFromCache(by:request) {
+
+            let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: cachedResponse.data)
+            onResponseWasReceived(.success(mappedModel))
+
+                return
+    }
+    session.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    onResponseWasReceived(.failure(error))
+                } else if let data = data {
+                    do {
+                        let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: data)
+                        saveResponseToCache(response, cachedData: data, by: request)
+                        onResponseWasReceived(.success(mappedModel))
+                    } catch {
+                       onResponseWasReceived(.failure(error))
                    }
               } else {
-                  onResponseWasReceived(.failure(NetworkTaskError.unknownError)
+                  onResponseWasReceived(.failure(NetworkTaskError.unknownError))
               }
          }
          .resume()
-      } catch {
-            onResponseWasReceived(.failure(error)
+        } catch {
+
+            onResponseWasReceived(.failure(error))
       }
 
     }
  }
 
- // MARK - EmptyModel
+    // MARK - EmptyModel
 
  extension BaseNetworkTask where Input == EmptyModel {
 
@@ -63,6 +78,24 @@ _onResponseWasReceived: (_result: Result<AbstractOutput, Error) -> Void
           }
 
       }
+   // MARK- Cache logic
+
+private extension BaseNetworkTask {
+
+    func getCachedResponseFromCache(by request: URLRequest) -> CachedURLResponse? {
+        return urlCache.cachedResponse(for: request)
+    }
+
+    func saveResponseToCache(_ response: URLResponse?, cachedData: Data?, by request: URLRequest) {
+        guard let response = response, let cachedData = cachedData else {
+            return
+        }
+
+        let cachedUrlResponse = CachedURLResponse(response: response, data: cachedData)
+        urlCache.storeCachedResponse(cachedUrlResponse, for: request)
+    }
+
+}
 
 // MARK - Private Methods
 
