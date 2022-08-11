@@ -18,29 +18,29 @@ class SearchPostsViewController: UIViewController, UIGestureRecognizerDelegate {
 
     //MARK: - Views
 
-    @IBOutlet private weak var searchUserNotificationsImages: UIImageView!
-    @IBOutlet private weak var searchUserNotificationsTexts: UILabel!
+    @IBOutlet private weak var searchUserNotificationsImage: UIImageView!
+    @IBOutlet private weak var searchUserNotificationsText: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     private var searchBar: UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 303, height: 32))
 
     //MARK: - Properties
     var notifyImages: UIImages? {
         didSet {
-            searchUserNotificationsImages.images = notifyImages
+            searchUserNotificationsImage.image = notifyImage
         }
     }
     var notifyTexts: String = "" {
         didSet {
-            searchUserNotificationTexts.texts = notifyTexts
+            searchUserNotificationText.text = notifyText
         }
     }
     var posts = AllPostsModel.shared.filteredPosts(searchText: "")
 
     //MARK: - Methods
     func configureApperance() {
-        searchUserNotificationsTexts.font = .systemFont(ofSize: 17, weight: .light)
+        searchUserNotificationsText.font = .systemFont(ofSize: 17, weight: .light)
         notifyImage = UIImage(named: "searchLens")
-        searchUserNotificationsTexts.texts = "Enter your request"
+        searchUserNotificationsText.text = "Enter your request"
         searchBar.delegate = self
         collectionView.register(UINib(nibName: "\(AllPostsCollectionViewCell.self)", bundle: .main), forCellWithReuseIdentifier: "\(AllPostsCollectionViewCell.self)")
         collectionView.dataSource = self
@@ -115,7 +115,7 @@ extension SearchPostsViewController: UICollectionViewDataSource, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "\(AllPostsCollectionViewCell.self)", for: indexPath)
         if let cell = cell as? AllPostsCollectionViewCell {
-            cell.titlesTexts = posts[indexPath.item].title
+            cell.titlesText = posts[indexPath.item].title
             cell.isFavorite = posts[indexPath.item].isFavorite
             cell.imageUrlInString = posts[indexPath.item].imageUrlInString
             cell.didFavoriteTap = { [weak self] in
