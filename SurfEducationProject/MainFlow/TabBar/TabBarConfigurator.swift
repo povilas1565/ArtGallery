@@ -1,58 +1,51 @@
-
+//
+//  TabBarConfigurator.swift
+//  SurfSummerSchoolProject
+//
+//  Created by Рыжков Павел on 04.08.2022.
+//
 import Foundation
 import UIKit
 
-final class TabBarConfigurator {
-
-    // MARK: - Private property
-
-    private let allTab: [TabBarModel] = [.main, .favorite, .profile]
-
-    // MARK: - Internal Methods
+class TabBarConfigurator {
+    private let allTabs: [TabBarModel] = [.allPosts, .favoritePosts, .profile]
 
     func configure() -> UITabBarController {
-        return getTabBarController()
+        return constructTabBarController()
     }
-
 }
 
-// MARK: - Private Methods
-
 private extension TabBarConfigurator {
-
-    func getTabBarController() -> UITabBarController {
+    func constructTabBarController() -> UITabBarController {
         let tabBarController = UITabBarController()
         tabBarController.tabBar.tintColor = .black
         tabBarController.tabBar.unselectedItemTintColor = .lightGray
         tabBarController.tabBar.backgroundColor = .white
-        tabBarController.viewControllers = getViewControllers()
-
+        tabBarController.viewControllers = getControllers()
         return tabBarController
     }
 
-    func getViewControllers() -> [UIViewController] {
+    func getControllers() -> [UIViewController] {
         var viewControllers = [UIViewController]()
 
-        allTab.forEach { tab in
-            let controller = getCurrentViewController(tab: tab)
-            let navigationController = UINavigationController(rootViewController: controller)
+        allTabs.forEach { tab in
+            let viewController = getCurrentViewController(tab: tab)
+            let navigationController = UINavigationController(rootViewController: viewController)
             let tabBarItem = UITabBarItem(title: tab.title, image: tab.image, selectedImage: tab.selectedImage)
-            controller.tabBarItem = tabBarItem
+            viewController.tabBarItem = tabBarItem
             viewControllers.append(navigationController)
         }
-
         return viewControllers
     }
 
     func getCurrentViewController(tab: TabBarModel) -> UIViewController {
         switch tab {
-        case .main:
-            return MainViewController()
-        case .favorite:
-            return FavoriteViewController()
+        case .allPosts:
+            return AllPostsViewController()
+        case .favoritePosts:
+            return FavoritePostsViewController()
         case .profile:
             return ProfileViewController()
         }
     }
-
 }
