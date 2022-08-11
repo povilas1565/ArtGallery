@@ -70,7 +70,7 @@ private extension FavoritePostsViewController {
     }
 }
 //MARK: - TableView DataSource
-extension FavoritePostViewController: UITableViewDataSource, UITableViewDelegate {
+extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
         return postModel.favoritePosts.count
     }
@@ -129,7 +129,7 @@ extension FavoritePostViewController: UITableViewDataSource, UITableViewDelegate
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = DetailedPostViewController()
+        let vc = DetailedPostsViewController()
         vc.model = self.postModel.favoritePosts[indexPath.section]
         navigationController?.pushViewController(vc, animated: true)
     }
