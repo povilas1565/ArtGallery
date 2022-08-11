@@ -12,17 +12,17 @@ class DetailedPostsTitlesTableViewCell: UITableViewCell {
 
 
     @IBOutlet weak var titlesPostsText: UILabel!
-    @IBOutlet private weak var titlesPostsDates: UILabel!
+    @IBOutlet private weak var titlesPostsDate: UILabel!
 
     //MARK: - Properties
-    var titlesTexts: String = "" {
+    var titlesText: String = "" {
         didSet {
             titlePostsText.text = titlesText
         }
     }
     var titlesDates: String = "" {
         didSet {
-            titlePostsDate.text = titlesDates
+            titlePostsDate.text = titlesDate
         }
     }
 
