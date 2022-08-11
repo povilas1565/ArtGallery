@@ -1,30 +1,35 @@
 
+//
+//  TabBarModel.swift
+//  SurfSummerSchoolProject
+//
+//  Created by Рыжков Павел on 04.08.2022.
+//
 
 import Foundation
 import UIKit
 
 enum TabBarModel {
-    case main
-    case favorite
+    case allPosts
+    case favoritePosts
     case profile
 
     var title: String {
         switch self {
-        case .main:
+        case .allPosts:
             return "Главная"
-        case .favorite:
+        case .favoritePosts:
             return "Избранное"
         case .profile:
             return "Профиль"
         }
     }
-
     var image: UIImage? {
         switch self {
-        case .main:
-            return UIImage(named: "mainTab")
-        case .favorite:
-            return UIImage(named: "favoriteTab")
+        case .allPosts:
+            return UIImage(named: "allPostsTab")
+        case .favoritePosts:
+            return UIImage(named: "favoritePostsTab")
         case .profile:
             return UIImage(named: "profileTab")
         }
@@ -33,5 +38,5 @@ enum TabBarModel {
     var selectedImage: UIImage? {
         return image
     }
-    
 }
+
