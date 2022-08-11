@@ -1,8 +1,16 @@
+//
+//  PictureResponseModel.swift
+//  SurfSummerSchoolProject
+//
+//  Created by Павел Рыжков on 09.08.2022.
+//
+
 import Foundation
 
 struct PictureResponseModel: Decodable {
 
 // MARK: - Internal Properties
+
     let id: String
     let title: String
     let content: String
@@ -13,6 +21,7 @@ struct PictureResponseModel: Decodable {
     }
 
 // MARK: - Private Properties
+
     private let publicationDate: Double
 
 }
