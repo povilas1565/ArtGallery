@@ -1,8 +1,16 @@
+//
+//  BaseNetworkTask.swift
+//  SurfSummerSchoolProject
+//
+//  Created by Павел Рыжков on 09.08.2022.
+//
+
 import Foundation
 
 struct BaseNetworkTask<AbstractInput: Encodable, AbstractOutput: Decodable>: NetworkTask {
 
     //MARK: - NetworkTask
+
 typealias Input = AbstractInput
 typealias Output = AbstractOutput
 
@@ -23,6 +31,7 @@ URL(string: "https://pictures.chronicker.fun/api")
 }
 
     // MARK - Initialization
+
     init(inNeedInjectToken: Bool, method: NetworkMethod, path: String) {
     self.isNeedInjectToken = inNeedInjectToken
     self.path = path
@@ -97,7 +106,7 @@ private extension BaseNetworkTask {
 
 }
 
-// MARK - Private Methods
+   // MARK - Private Methods
 
 private extension BaseNetworkTask {
 
