@@ -9,6 +9,7 @@ import UIKit
 class AllPostsCollectionViewCell: UICollectionViewCell {
 
     //MARK: - Constants
+
     private enum Constants {
         static let favoriteTapped = UIImage(named: "favoriteTapped")
         static let favoriteUntapped = UIImage(named: "favoriteUntapped")
@@ -40,7 +41,7 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
     //MARK: - Properties
     var titlesTexts: String = "" {
         didSet {
-            postsTextsLabel.texts = titlesTexts
+            postsTextLabel.text = titlesText
         }
     }
     var imageUrlInString: String = "" {
@@ -76,7 +77,7 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
     }
     override func prepareForReuse() {
         imageUrlInString = ""
-        titlesTexts = ""
+        titlesText = ""
         postsImageView.image = UIImage()
 
     }
@@ -85,8 +86,8 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
 //MARK: - Private methods
 private extension AllPostsCollectionViewCell {
     func configureCell() {
-        postsTextsLabel.textColor = .black
-        postsTextsLabel.font = .systemFont(ofSize: 14)
+        postsTextLabel.textColor = .black
+        postsTextLabel.font = .systemFont(ofSize: 14)
 
         postsImageView.layer.cornerRadius = 14
 
