@@ -15,11 +15,11 @@ class DetailedPostsImagesTableViewCell: UITableViewCell {
         static let favoriteUntapped = UIImage(named: "favoriteUntapped")
     }
     let favoritesStorage = FavoritesStorage.shared
-    var postTextLabel: String = ""
+    var postsTextsLabel: String = ""
 
     //MARK: - Views
 
-    @IBOutlet private weak var detailedPostsImagesViews: UIImagesViews!
+    @IBOutlet private weak var detailPostsImageView: UIImageView!
     @IBOutlet weak var favoriteButtonLabel: UIButton!
 
 
