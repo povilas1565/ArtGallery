@@ -1,5 +1,9 @@
-
-
+//
+//  AppDelegate.swift
+//  SurfSummerSchoolProject
+//
+//  Created by Павел Рыжков on 03.08.2022.
+//
 import UIKit
 
 @main
@@ -8,21 +12,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var tokenStorage: TokenStorage {
         BaseTokenStorage()
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
+        self.window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         if #available(iOS 13.0, *) {
             window?.overrideUserInterfaceStyle = .light
         }
 
         startApplicationProccess()
-
-        return true
-        }
-
-        runMainFlow()
-
         return true
     }
 
@@ -30,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         runLaunchScreen()
 
         if let tokenContainer = try? tokenStorage.getToken(), !tokenContainer.isExpired {
+            runMainFlow()
         } else {
             let tempCredentials = AuthRequestModel(phone: "+79876543219", password: "qwerty")
             AuthService()
@@ -59,3 +59,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
+
+
