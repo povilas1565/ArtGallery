@@ -20,7 +20,7 @@ class DetailedPostsBodyShortedTableViewCell: UITableViewCell {
         super.awakeFromNib()
         configureApperance()
     }
-    private func configureApperance() {
+    private func configureAppearance() {
         selectionStyle = .none
         bodyTextShorted.font = .systemFont(ofSize: 15, weight: .light)
         bodyTextShorted.textColor = .black
