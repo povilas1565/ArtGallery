@@ -1,24 +1,14 @@
-# Информация по проекту
+# SurfSummerSchoolProject
 
-[Дизайн](https://www.figma.com/file/DskQkoBqXewHFzyqlKkao3/Surf-education-iOS?node-id=9%3A8467)
+Учебное клиент-серверное приложение в рамках летней школы разработки от компании Surf. Представляет собой полноценное приложение с аутентификацией и авторизацией, с возможностью читать посты из интернета, добавлять их в избранное. Дизайн и серверная часть предоставлена ребятами из Surf. 
 
-### Сервер
 
-Base Url: https://pictures.chronicker.fun/api
-<br>Сваггер спецификация: https://pictures.chronicker.fun/
+<img width="164" alt="Снимок экрана 2022-08-06 в 20 02 56" src="https://user-images.githubusercontent.com/47087482/183258789-cb3a8d47-79ba-474a-9276-6d9ac726fc01.png">
 
-**Аккаунты:**
-Доступны все картинки: +71234567890 / qwerty
-<br>Часть картинок: +79876543219 / qwerty
-<br>Без картинок: +78005003030 / qwerty
+<img width="164" alt="Снимок экрана 2022-08-06 в 20 03 22" src="https://user-images.githubusercontent.com/47087482/183258797-ba1b6caa-14e5-4de4-829d-41634b304b84.png">
 
-### Общая логика по выполнению запросов:
+<img width="164" alt="Снимок экрана 2022-08-06 в 20 03 46" src="https://user-images.githubusercontent.com/47087482/183258809-ceb38272-aa6e-4acf-87b1-5fa0de62f456.png">
 
-Все запросы, кроме **auth/login** требуют токен авторизации. Передавать в хедерах "Authorization": "Token $token".
-<br>Где $token - это токен, который вы получили при авторизации, в запросе **auth/login.**
+<img width="164" alt="Снимок экрана 2022-08-06 в 20 04 10" src="https://user-images.githubusercontent.com/47087482/183258819-37dc146c-004f-4ce9-bd62-46d4d9e4e20d.png">
 
-Вечный токен, чтобы обойти авторизацию: 595d9f58b8ac34689b1326e2cf4ef803882995c267a00ce34c6220f4a6d8ed6a
-
-или
-
-7af13ab633789e2601529cb14782c7e114af837365ad922b2bb2b09f4b8d72b9
+<img width="164" alt="Снимок экрана 2022-08-06 в 20 04 54" src="https://user-images.githubusercontent.com/47087482/183258841-d7739528-d3a4-4bf8-85d0-e61e73582260.png">
