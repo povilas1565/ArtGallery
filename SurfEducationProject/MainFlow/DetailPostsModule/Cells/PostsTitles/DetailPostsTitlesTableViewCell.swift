@@ -1,38 +1,42 @@
 
+//
+//  DetailPostsTitlesTableViewCell.swift
+//  SurfSummerSchoolProject
+//
+//  Created by Антон Голубейков on 06.08.2022.
+//
 import UIKit
 
-class DetailTitleTableViewCell: UITableViewCell {
+class DetailedPostsTitlesTableViewCell: UITableViewCell {
+    //MARK: - Views
 
-    // MARK: - Views
 
-    @IBOutlet private weak var cartTitleLabel: UILabel!
-    @IBOutlet private weak var dateLabel: UILabel!
+    @IBOutlet weak var titlesPostsText: UILabel!
+    @IBOutlet private weak var titlesPostsDates: UILabel!
 
-    // MARK: - Properties
-
-    var title: String = "" {
+    //MARK: - Properties
+    var titlesTexts: String = "" {
         didSet {
-            cartTitleLabel.text = title
+            titlePostsText.text = titlesText
+        }
+    }
+    var titlesDates: String = "" {
+        didSet {
+            titlePostsDate.text = titlesDates
         }
     }
 
-    var date: String = "" {
-        didSet {
-            dateLabel.text = date
-        }
-    }
-
-    // MARK: - UITableViewCell
-
+    //MARK: - Methods
     override func awakeFromNib() {
         super.awakeFromNib()
-        configureAppearance()
+        configureApperance()
     }
 
-    private func configureAppearance() {
+    private func configureApperance() {
         selectionStyle = .none
-        cartTitleLabel.font = .systemFont(ofSize: 16)
-        dateLabel.font = .systemFont(ofSize: 10)
-        dateLabel.textColor = UIColor(displayP3Red: 0xB3 / 255, green: 0xB3 / 255, blue: 0xB3 / 255, alpha: 1)
+        titlePostTexts.font = .systemFont(ofSize: 16)
+        titlePostDates.font = .systemFont(ofSize: 10)
+        titlePostDates.textColor = UIColor(displayP3Red: 0xB3 / 255, green: 0xB3 / 255, blue: 0xB3 / 255, alpha: 1)
     }
+
 }
