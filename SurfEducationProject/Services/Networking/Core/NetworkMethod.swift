@@ -11,7 +11,7 @@ protocol NetworkMethod {}
 public enum NetworkMethod: String {
 
 case get
-cade post
+case post
 }
 
 extension NetworkMethod {
