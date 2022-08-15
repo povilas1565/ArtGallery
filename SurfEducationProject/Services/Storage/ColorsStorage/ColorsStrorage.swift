@@ -2,7 +2,7 @@
 //  ColorsStorage.swift
 //  SurfSummerSchoolProject
 //
-// Created by Paul1565 on 15.08.2022.
+// Created by Павел Рыжков on 15.08.2022.
 //
 
 import UIKit
