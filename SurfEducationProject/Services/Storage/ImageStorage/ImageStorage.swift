@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 struct ImageStorage {
-    static let passwordIsShownIcon = UIImage(named: "passwordShown")
-    static let passwordIsHiddenIcon = UIImage(named: "passwordHidden")
+    static let passwordShownIcon = UIImage(named: "passwordShown")
+    static let passwordHiddenIcon = UIImage(named: "passwordHidden")
 
     }
 
