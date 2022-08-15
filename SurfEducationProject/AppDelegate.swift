@@ -29,7 +29,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         runLaunchScreen()
 
         if let tokenContainer = try? tokenStorage.getToken(), !tokenContainer.isExpired {
-            runMainFlow()
+            //runMainFlow()
+
+            let authVC = AuthViewController()
+            let navigationController = UINavigationController(rootViewController: authVC)
+            self.window?.rootViewController = navigationController
+
         } else {
             let tempCredentials = AuthRequestModel(phone: "+79876543219", password: "qwerty")
             AuthService()
@@ -52,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func runLaunchScreen() {
-        let lauchScreenViewController = UIStoryboard(name: "LaunchScreen", bundle: .main)
+        let launchScreenViewController = UIStoryboard(name: "LaunchScreen", bundle: .main)
                 .instantiateInitialViewController()
 
         window?.rootViewController = lauchScreenViewController
