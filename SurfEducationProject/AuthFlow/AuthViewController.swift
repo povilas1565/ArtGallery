@@ -21,8 +21,8 @@ class AuthViewController: UIViewController {
     @IBOutlet weak var passwordBottomLine: UIView!
 
     //MARK: - Properties
-
-    private let maxNumberCountInPhoneNumberField = 10
+    //Маска номера телефона
+    private let maxNumberCountInPhoneNumberField = 11
     private var regex: NSRegularExpression? {
         do {
             let regexExpression = try NSRegularExpression(pattern: "[\\+\\s-\\(\\)]", options: .caseInsensitive)
@@ -32,6 +32,10 @@ class AuthViewController: UIViewController {
             return nil
         }
     }
+
+    //Activity indicator для кнопки Вход
+    private var originalButtonText: String = "Вход"
+    var activityIndicator: UIActivityIndicatorView!
 
 
     //MARK: - Methods
@@ -45,6 +49,30 @@ class AuthViewController: UIViewController {
         }
         if !(loginTextField.text == "" && passwordTextField.text == "") {
             print("Test")
+            showButtonLoading()
+            guard let phoneNumber = loginTextField.text else { return }
+            let phoneNumberClearedFromMask = clearPhoneNumberFromMask(phoneNumber: phoneNumber)
+            guard let password = passwordTextField.text else { return }
+
+            print(phoneNumberClearedFromMask)
+            print(password)
+            //let credentials = AuthRequestModel(phone: phoneNumberClearedFromMask, password: password)
+            let credentials = AuthRequestModel(phone: "+79876543219", password: "qwerty")
+            AuthService()
+                    .performLoginRequestAndSaveToken(credentials: credentials) { [weak self] result in
+                        switch result {
+                        case .success:
+                            DispatchQueue.main.async {
+                                if let delegate = UIApplication.shared.delegate as? AppDelegate {
+                                    let mainViewController = TabBarConfigurator().configure()
+                                    delegate.window?.rootViewController = mainViewController
+                                }
+                            }
+                        case .failure:
+                            print("failure")
+                            self?.hideButtonLoading()
+                        }
+                    }
         }
     }
 
@@ -167,6 +195,11 @@ extension AuthViewController: UITextFieldDelegate {
         return "+" + number
     }
 
+    func clearPhoneNumberFromMask(phoneNumber: String) -> String {
+        let phoneNumberClearedFromSymbols = phoneNumber.replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: " ", with: "")
+        return phoneNumberClearedFromSymbols
+    }
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let fullString = (textField.text ?? "") + string
         if textField == loginTextField {
@@ -198,6 +231,7 @@ extension AuthViewController {
         passwordConstraint.constant = 40
         self.view.layoutIfNeeded()
     }
+
     func showEmptyPasswordNotification() {
         passwordBottomLine.backgroundColor = .red
         let passwordEmptyNotification = UILabel(frame: CGRect(x: 0, y: 0, width: loginTextField.frame.width, height: 16))
@@ -236,12 +270,54 @@ extension AuthViewController {
     }
 }
 
+//MARK: - Adding activity indicator to Button after tap
+extension AuthViewController {
+    func showButtonLoading() {
+        loginButtonLabel.setTitle("", for: .normal)
+
+        if (activityIndicator == nil) {
+            activityIndicator = createActivityIndicator()
+        }
+
+        showSpinning()
+    }
+
+    func hideButtonLoading() {
+        loginButtonLabel.setTitle(originalButtonText, for: .normal)
+        activityIndicator.stopAnimating()
+    }
+
+    private func createActivityIndicator() -> UIActivityIndicatorView {
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .lightGray
+        return activityIndicator
+    }
+
+    private func showSpinning() {
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        loginButtonLabel.addSubview(activityIndicator)
+        centerActivityIndicatorInButton()
+        activityIndicator.startAnimating()
+    }
+
+    private func centerActivityIndicatorInButton() {
+        guard loginButtonLabel != nil else { return }
+        let xCenterConstraint = NSLayoutConstraint(item: loginButtonLabel!, attribute: .centerX, relatedBy: .equal, toItem: activityIndicator, attribute: .centerX, multiplier: 1, constant: 0)
+        loginButtonLabel.addConstraint(xCenterConstraint)
+
+        let yCenterConstraint = NSLayoutConstraint(item: loginButtonLabel!, attribute: .centerY, relatedBy: .equal, toItem: activityIndicator, attribute: .centerY, multiplier: 1, constant: 0)
+        loginButtonLabel.addConstraint(yCenterConstraint)
+    }
+}
+
 //MARK: - Handle keyboard's show-up methods
 extension AuthViewController {
 
     //Скрытие клавиатуры по тапу
     @objc func hideKeyboard() { self.scrollView?.endEditing(true)
     }
+
     func subcribeToNotificationCenter() {
 
         //Подписываемся на два уведомления: одно приходит при появлении клавиатуры. #selector(self.keyboardWasShown) - функция, которая выполняется после получения события.
@@ -249,6 +325,7 @@ extension AuthViewController {
         // Второе — когда она пропадает
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillBeHidden(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
+
     func unsubscribeFromNotificationCenter() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
