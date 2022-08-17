@@ -5,17 +5,14 @@
 //  Created by Павел Рыжков on 09.08.2022.
 //
 
-import Foundation
-
 struct BaseNetworkTask<AbstractInput: Encodable, AbstractOutput: Decodable>: NetworkTask {
 
-    //MARK: - NetworkTask
+    // MARK: - NetworkTask
+    typealias Input = AbstractInput
+    typealias Output = AbstractOutput
 
-typealias Input = AbstractInput
-typealias Output = AbstractOutput
-
-var baseUrl: URL? {
-URL(string: "https://pictures.chronicker.fun/api")
+    var baseURL: URL? {
+        URL(string: "https://pictures.chronicker.fun/api")
     }
 
     let path: String
@@ -23,72 +20,73 @@ URL(string: "https://pictures.chronicker.fun/api")
     let session: URLSession = URLSession(configuration: .default)
     let isNeedInjectToken: Bool
     var urlCache: URLCache {
-             URLCache.shared
+        URLCache.shared
     }
 
-   var tokenStorage: TokenStorage {
-       BaseTokenStorage()
-}
+    var tokenStorage: TokenStorage {
+        BaseTokenStorage()
+    }
+    var profileStorage: ProfileStorage {
+        BaseProfileStorage()
+    }
 
-    // MARK - Initialization
 
+    // MARK: - Initializtion
     init(inNeedInjectToken: Bool, method: NetworkMethod, path: String) {
-    self.isNeedInjectToken = inNeedInjectToken
-    self.path = path
-    self.method = method
+        self.isNeedInjectToken = inNeedInjectToken
+        self.path = path
+        self.method = method
+    }
+
+    // MARK: - NetworkTask
+    func performRequest(
+            input: AbstractInput,
+            _ onResponseWasReceived: @escaping (_ result: Result<AbstractOutput, Error>) -> Void
+    ) {
+        do {
+            let request = try getRequest(with: input)
+
+            if let cachedResponse = getCachedResponseFromCache(by: request) {
+
+                let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: cachedResponse.data)
+
+                onResponseWasReceived(.success(mappedModel))
+                //return
+            } else {
+
+                session.dataTask(with: request) { data, response, error in
+                            if let error = error {
+                                onResponseWasReceived(.failure(error))
+                            } else if let data = data {
+                                do {
+                                    let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: data)
+                                    saveResponseToCache(response, cachedData: data, by: request)
+                                    onResponseWasReceived(.success(mappedModel))
+                                } catch {
+                                    onResponseWasReceived(.failure(error))
+                                }
+                            } else {
+                                onResponseWasReceived(.failure(NetworkTaskError.unknownError))
+                            }
+                        }
+                        .resume()
+            }
+        } catch {
+            onResponseWasReceived(.failure(error))
+        }
+    }
+
 }
 
-    // MARK - NetworkTask
+// MARK: - EmptyModel
+extension BaseNetworkTask where Input == EmptyModel {
 
-func performRequest(
-input: AbstractInput,
-_onResponseWasReceived: @escaping (_result: Result<AbstractOutput, Error>) -> Void
-) {
-    do {
-        let request = try getRequest(with: input)
-
-        if let cachedResponse = getCachedResponseFromCache(by:request) {
-
-            let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: cachedResponse.data)
-            onResponseWasReceived(.success(mappedModel))
-
-                return
+    func performRequest(_ onResponseWasReceived: @escaping (_ result: Result<AbstractOutput, Error>) -> Void) {
+        performRequest(input: EmptyModel(), onResponseWasReceived)
     }
-    session.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    onResponseWasReceived(.failure(error))
-                } else if let data = data {
-                    do {
-                        let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: data)
-                        saveResponseToCache(response, cachedData: data, by: request)
-                        onResponseWasReceived(.success(mappedModel))
-                    } catch {
-                       onResponseWasReceived(.failure(error))
-                   }
-              } else {
-                  onResponseWasReceived(.failure(NetworkTaskError.unknownError))
-              }
-         }
-         .resume()
-        } catch {
 
-            onResponseWasReceived(.failure(error))
-      }
-
-    }
- }
-
-    // MARK - EmptyModel
-
- extension BaseNetworkTask where Input == EmptyModel {
-
-        func performRequest(_onResponseWasReceived: @escaping (_ result: Result<AbstractOutput, Error>) -> Void) {
-              performRequest(input: EmptyModel(), onResponseWasReceived)
-          }
-
-      }
-   // MARK- Cache logic
-
+}
+// MARK: - Cache logic
 private extension BaseNetworkTask {
 
     func getCachedResponseFromCache(by request: URLRequest) -> CachedURLResponse? {
@@ -106,8 +104,7 @@ private extension BaseNetworkTask {
 
 }
 
-   // MARK - Private Methods
-
+// MARK: - Private Methods
 private extension BaseNetworkTask {
 
     enum NetworkTaskError: Error {
