@@ -9,6 +9,7 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    //MARK: - UIApplication
     var window: UIWindow?
     var tokenStorage: TokenStorage {
         BaseTokenStorage()
@@ -25,28 +26,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func startApplicationProccess() {
+    //MARK: - Methods
+    func startApplicationProcess() {
         runLaunchScreen()
 
         if let tokenContainer = try? tokenStorage.getToken(), !tokenContainer.isExpired {
-            //runMainFlow()
-
-            let authVC = AuthViewController()
-            let navigationController = UINavigationController(rootViewController: authVC)
-            self.window?.rootViewController = navigationController
-
+            runMainFlow()
         } else {
-            let tempCredentials = AuthRequestModel(phone: "+79876543219", password: "qwerty")
-            AuthService()
-                    .performLoginRequestAndSaveToken(credentials: tempCredentials) { [weak self] result in
-                        switch result {
-                        case .success:
-                            self?.runMainFlow()
-                        case .failure:
-                            // TODO: - Handle error, if token was not received
-                            break
-                        }
-                    }
+            runAuthFlow()
         }
     }
 
@@ -56,13 +43,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func runAuthFlow() {
+        DispatchQueue.main.async {
+            let authVC = AuthViewController()
+            let navigationController = UINavigationController(rootViewController: authVC)
+            self.window?.rootViewController = navigationController
+            }
+        }
+
     func runLaunchScreen() {
         let launchScreenViewController = UIStoryboard(name: "LaunchScreen", bundle: .main)
                 .instantiateInitialViewController()
 
         window?.rootViewController = lauchScreenViewController
     }
-
 }
 
 
