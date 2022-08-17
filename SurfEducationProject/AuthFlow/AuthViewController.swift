@@ -21,6 +21,7 @@ class AuthViewController: UIViewController {
     @IBOutlet weak var passwordBottomLine: UIView!
 
     //MARK: - Properties
+
     //Маска номера телефона
     private let maxNumberCountInPhoneNumberField = 11
     private var regex: NSRegularExpression? {
@@ -39,7 +40,6 @@ class AuthViewController: UIViewController {
 
 
     //MARK: - Methods
-
     @IBAction func loginButtonAction(_ sender: Any) {
         if loginTextField.text == "" {
             showEmptyLoginNotification()
@@ -48,16 +48,12 @@ class AuthViewController: UIViewController {
             showEmptyPasswordNotification()
         }
         if !(loginTextField.text == "" && passwordTextField.text == "") {
-            print("Test")
             showButtonLoading()
+            guard let phoneNumber = loginTextField.text else { return }
             guard let phoneNumber = loginTextField.text else { return }
             let phoneNumberClearedFromMask = clearPhoneNumberFromMask(phoneNumber: phoneNumber)
             guard let password = passwordTextField.text else { return }
-
-            print(phoneNumberClearedFromMask)
-            print(password)
-            //let credentials = AuthRequestModel(phone: phoneNumberClearedFromMask, password: password)
-            let credentials = AuthRequestModel(phone: "+79876543219", password: "qwerty")
+            let credentials = AuthRequestModel(phone: phoneNumberClearedFromMask, password: password)
             AuthService()
                     .performLoginRequestAndSaveToken(credentials: credentials) { [weak self] result in
                         switch result {
@@ -69,11 +65,21 @@ class AuthViewController: UIViewController {
                                 }
                             }
                         case .failure:
-                            print("failure")
-                            self?.hideButtonLoading()
+                            DispatchQueue.main.async {
+                                let model = SnackbarModel(text: "Login or password entered incorrectly")
+                                let snackbar = SnackbarView(model: model)
+                                guard let `self` = self else { return }
+                                snackbar.showSnackBar(on: self, with: model)
+                                self.hideButtonLoading()
+                                }
                         }
                     }
         }
+    }
+
+    @IBAction func demoButtonAction(_ sender: Any) {
+        loginTextField.text = "+7 (987) 654-32-19"
+        passwordTextField.text = "qwerty"
     }
 
     //MARK: - View lifecycle
@@ -98,7 +104,6 @@ class AuthViewController: UIViewController {
 }
 
 //MARK: - Configure view
-
 private extension AuthViewController {
     func configureAppearance() {
         self.loginTextField.placeholder = "Login"
