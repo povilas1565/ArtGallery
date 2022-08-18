@@ -17,7 +17,7 @@ class SnackbarView: UIView {
     private let label: UILabel = {
         let label = UILabel()
         label.textColor = ColorsStorage.white
-        label.font = .systemFont(ofSize: 14, weight: .light)
+        label.font = .systemFont(ofSize: 12, weight: .light)
         label.numberOfLines = 0
         label.textAlignment = .center
 
