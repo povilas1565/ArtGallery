@@ -16,6 +16,12 @@ class SearchPostsViewController: UIViewController, UIGestureRecognizerDelegate {
         static let vSpaceBetweenItems: CGFloat = 8
     }
 
+    private enum ConstantImages {
+        static let backArrow: UIImage? = ImagesStorage.backArrow
+        static let searchLens: UIImage? = ImagesStorage.searchLens
+        static let sadSmile: UIImage? = ImagesStorage.sadSmile
+    }
+
     //MARK: - Views
 
     @IBOutlet private weak var searchUserNotificationsImage: UIImageView!
@@ -47,21 +53,16 @@ class SearchPostsViewController: UIViewController, UIGestureRecognizerDelegate {
         collectionView.delegate = self
         collectionView.contentInset = .init(top: 10, left: 16, bottom: 10, right: 16)
     }
-    //TO DO: пока что не работает
-//    @objc func resignSearchBar() {
-//        //searchBar.resignFirstResponder()
-//        self.searchBar.endEditing(true)
-//    }
 
     func configureNavigationBar() {
-        let backButton = UIBarButtonItem(image: UIImage(named: "backArrow"),
+        let backButton = UIBarButtonItem(image: UIImage(image: ConstantImages.backArrow),
                 style: .plain,
                 target: navigationController,
                 action: #selector(UINavigationController.popViewController(animated:)))
         let searchBarItem = UIBarButtonItem(customView: searchBar)
         navigationItem.rightBarButtonItem = searchBarItem
         navigationItem.leftBarButtonItem = backButton
-        navigationItem.leftBarButtonItem?.tintColor = .black
+        navigationItem.leftBarButtonItem?.tintColor = ColorsStorage.black
         navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
 
@@ -101,8 +102,8 @@ extension SearchPostsViewsController: UISearchBarDelegate {
         } else {
             posts = []
             collectionView.reloadData()
-            notifyImage = UIImage(named: "searchLens")
-            searchUserNotificationText.text = "Введите ваш запрос"
+            notifyImage = ConstantImages.searchLens
+            searchUserNotificationText.text = "Enter your request"
         }
     }
 }
@@ -120,22 +121,23 @@ extension SearchPostsViewController: UICollectionViewDataSource, UICollectionVie
             cell.imageUrlInString = posts[indexPath.item].imageUrlInString
             cell.didFavoriteTap = { [weak self] in
                 self?.posts[indexPath.item].isFavorite.toggle()
-                AllPostsModel.shared.favoritePost(for: self?.posts[indexPath.item] ?? PostModel.createDefault())
+                guard let post = self?.posts[indexPath.item] else { return }
+                AllPostsModel.shared.favoritePost(for: post)
             }
         }
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemWidth = (view.frame.width - Constants.collectionViewPadding * 2 - Constants.hSpaceBetweenItems) / 2
-        return CGSize(width: itemWidth, height: itemWidth / 168 * 246)
+        return CGSize(width: itemWidth, height: itemWidth * cellProportion)
 
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return Constants.vSpaceBetweenItems
+        return ConstantConstraints.vSpaceBetweenItems
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return Constants.hSpaceBetweenItems
+        return ConstantConstraints.hSpaceBetweenItems
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = DetailPostsViewController()

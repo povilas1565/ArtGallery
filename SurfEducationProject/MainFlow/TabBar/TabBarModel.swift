@@ -9,6 +9,12 @@
 import Foundation
 import UIKit
 
+private enum TabBarImages {
+    static let allPostsTab: UIImage? = ImagesStorage.allPostsTab
+    static let favoritePosts: UIImage? = ImagesStorage.favoritePostsTab
+    static let profileTab: UIImage? = ImagesStorage.profileTab
+}
+
 enum TabBarModel {
     case allPosts
     case favoritePosts
@@ -17,21 +23,21 @@ enum TabBarModel {
     var title: String {
         switch self {
         case .allPosts:
-            return "Главная"
+            return "Main"
         case .favoritePosts:
-            return "Избранное"
+            return "Favourites"
         case .profile:
-            return "Профиль"
+            return "Profile"
         }
     }
     var image: UIImage? {
         switch self {
         case .allPosts:
-            return UIImage(named: "allPostsTab")
+            return TabBarImages.allPostsTab
         case .favoritePosts:
-            return UIImage(named: "favoritePostsTab")
+            return TabBarImages.favoritePosts
         case .profile:
-            return UIImage(named: "profileTab")
+            return TabBarImages.profileTab
         }
     }
 
