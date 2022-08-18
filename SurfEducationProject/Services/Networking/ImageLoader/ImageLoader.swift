@@ -14,6 +14,11 @@ struct ImageLoader {
     let session = URLSession(configuration: .default)
 
     func loadImage(from url: URL, _ onLoadWasCompleted: @escaping (_ result: Result<UIImage, Error>) -> Void) {
+        let imageCache = NSCache<AnyObject, AnyObject>()
+
+        if let imageFromCache = imageCache.object(forKey: url as AnyObject) as? UIImage {
+            onLoadWasCompleted(.success(imageFromCache))
+        } else {
         session.dataTask(with: url) { data, _, error in
             if let error = error {
                 onLoadWasCompleted(.failure(error))
@@ -24,5 +29,5 @@ struct ImageLoader {
         }
         .resume()
     }
-
+}
 }
