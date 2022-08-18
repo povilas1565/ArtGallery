@@ -19,7 +19,7 @@ class DetailedPostsImagesTableViewCell: UITableViewCell {
 
     //MARK: - Views
 
-    @IBOutlet private weak var detailPostsImageView: UIImageView!
+    @IBOutlet private weak var detailPostsImagesView: UIImageView!
     @IBOutlet weak var favoriteButtonLabel: UIButton!
 
 
