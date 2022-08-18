@@ -44,7 +44,7 @@ private extension DetailPostsViewController {
 
     func configureNavigationBar() {
         navigationItem.title = model?.title ?? ""
-        let backButton = UIBarButtonItem(image: UIImage(image: backArrowImage),
+        let backButton = UIBarButtonItem(image: backArrowImage,
                 style: .plain,
                 target: navigationController,
                 action: #selector(UINavigationController.popViewController(animated:)))
@@ -63,9 +63,9 @@ private extension DetailPostsViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
 
-        tableView.register(UINib(nibName: "\(DetailPostsImagesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsImagesTableViewCell.self)")
-        tableView.register(UINib(nibName: "\(DetailPostsTitlesTablesViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsTitlesTableViewCell.self)")
-        tableView.register(UINib(nibName: "\(DetailPostsBodiesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsBodiesTableViewCell.self)")
+        tableView.register(UINib(nibName: detailPostsImagesTableViewCell, bundle: .main), forCellReuseIdentifier:  detailPostsImagesTableViewCell)
+        tableView.register(UINib(nibName: detailPostsTitlesTablesViewCell, bundle: .main), forCellReuseIdentifier: detailPostsTitlesTableViewCell)
+        tableView.register(UINib(nibName: dDetailPostsBodiesTableViewCell, bundle: .main), forCellReuseIdentifier: detailPostsBodiesTableViewCell)
         tableView.dataSource = self
         tableView.separatorStyle = .none
     }
@@ -80,20 +80,20 @@ extension DetailPostsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.item {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsImagesTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: detailPostsImagesTableViewCell)
             if let cell = cell as? DetailPostImageTableViewCell {
                 cell.imageUrlInString = model?.imageUrlInString ?? ""
             }
             return cell ?? UITableViewCell()
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsTitlesTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: detailPostsTitlesTableViewCell)
             if let cell = cell as? DetailPostTitleTableViewCell {
                 cell.titleText = model?.title ?? ""
                 cell.titleDate = model?.dateCreation ?? ""
             }
             return cell ?? UITableViewCell()
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsBodiesTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: detailPostsBodiesTableViewCell)
             if let cell = cell as? DetailPostBodyTableViewCell {
                 cell.bodyText = model?.content ?? ""
             }

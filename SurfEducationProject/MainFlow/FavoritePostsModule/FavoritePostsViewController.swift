@@ -67,9 +67,9 @@ private extension FavoritePostsViewController {
             tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        tableView.register(UINib(nibName: "\(DetailPostsImagesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsImageTableViewCell.self)")
-        tableView.register(UINib(nibName: "\(DetailPostsTitlesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsTitleTableViewCell.self)")
-        tableView.register(UINib(nibName: "\(DetailPostsBodiesShortedTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsBodiesShortedTableViewCell.self)")
+        tableView.register(UINib(nibName: detailPostsImagesTableViewCell, bundle: .main), forCellReuseIdentifier: detailPostsImageTableViewCell)
+        tableView.register(UINib(nibName: detailPostsTitlesTableViewCell, bundle: .main), forCellReuseIdentifier: detailPostsTitleTableViewCell)
+        tableView.register(UINib(nibName: detailPostsBodiesShortedTableViewCell, bundle: .main), forCellReuseIdentifier: detailPostsBodiesShortedTableViewCell)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
@@ -123,14 +123,14 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
             }
             return cell ?? UITableViewCell()
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsTitlesTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: detailPostsTitlesTableViewCell)
             if let cell = cell as? DetailedPostTitleTableViewCell {
                 cell.titleText = postModel.favoritePosts[indexPath.section].title
                 cell.titleDate = postModel.favoritePosts[indexPath.section].dateCreation
             }
             return cell ?? UITableViewCell()
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsBodiesShortedTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: detailPostsBodiesShortedTableViewCell)
             if let cell = cell as? DetailedPostBodyShortedTableViewCell {
                 cell.bodyText = postModel.favoritePosts[indexPath.section].content
             }
