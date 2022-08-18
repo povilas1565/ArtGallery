@@ -11,9 +11,9 @@ class DetailPostsViewController: UIViewController, UIGestureRecognizerDelegate {
 
     //MARK: Constants
     private let backArrowImage: UIImage? = ImagesStorage.backArrow
-    private let detailPostImageTableViewCell: String = "\(DetailPostImageTableViewCell.self)"
-    private let detailPostTitleTableViewCell: String = "\(DetailPostTitleTableViewCell.self)"
-    private let detailPostBodyTableViewCell: String = "\(DetailPostBodyTableViewCell.self)"
+    private let detailPostsImagesTableViewCell: String = "\(DetailPostsImagesTableViewCell.self)"
+    private let detailPostsTitlesTableViewCell: String = "\(DetailPostsTitlesTableViewCell.self)"
+    private let detailPostsBodyiesTableViewCell: String = "\(DetailPostsBodiesTableViewCell.self)"
 
     private let numberOfRows = 3
 
@@ -63,9 +63,9 @@ private extension DetailPostsViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
 
-        tableView.register(UINib(nibName: "\(DetailPostImageTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostImageTableViewCell.self)")
-        tableView.register(UINib(nibName: "\(DetailPostTitleTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostTitleTableViewCell.self)")
-        tableView.register(UINib(nibName: "\(DetailPostBodyTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostBodyTableViewCell.self)")
+        tableView.register(UINib(nibName: "\(DetailPostsImagesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsImagesTableViewCell.self)")
+        tableView.register(UINib(nibName: "\(DetailPostsTitlesTablesViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsTitlesTableViewCell.self)")
+        tableView.register(UINib(nibName: "\(DetailPostsBodiesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsBodiesTableViewCell.self)")
         tableView.dataSource = self
         tableView.separatorStyle = .none
     }
@@ -80,20 +80,20 @@ extension DetailPostsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.item {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailedPostImageTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsImagesTableViewCell.self)")
             if let cell = cell as? DetailPostImageTableViewCell {
                 cell.imageUrlInString = model?.imageUrlInString ?? ""
             }
             return cell ?? UITableViewCell()
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostTitleTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsTitlesTableViewCell.self)")
             if let cell = cell as? DetailPostTitleTableViewCell {
                 cell.titleText = model?.title ?? ""
                 cell.titleDate = model?.dateCreation ?? ""
             }
             return cell ?? UITableViewCell()
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostBodyTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsBodiesTableViewCell.self)")
             if let cell = cell as? DetailPostBodyTableViewCell {
                 cell.bodyText = model?.content ?? ""
             }
