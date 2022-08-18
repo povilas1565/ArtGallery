@@ -43,8 +43,8 @@ private extension FavoritePostsViewController {
     }
 
     func configureNavigationBar() {
-        navigationItem.title = "Favorites"
-        let searchButton = UIBarButtonItem(image: UIImage(image: searchBar),
+        navigationItem.title = "Favourites"
+        let searchButton = UIBarButtonItem(image: searchBar,
                 style: .plain,
                 target: self,
                 action: #selector(goToSearchVC(sender:)))
