@@ -12,9 +12,9 @@ class FavoritePostsViewController: UIViewController {
     //MARK: Constants
     private let searchBar: UIImage? = ImagesStorage.searchBar
 
-    private let detailPostImageTableViewCell: String = "\(DetailPostImageTableViewCell.self)"
-    private let detailPostTitleTableViewCell: String = "\(DetailPostTitleTableViewCell.self)"
-    private let detailPostBodyShortedTableViewCell: String = "\(DetailPostBodyShortedTableViewCell.self)"
+    private let detailPostsImagesTableViewCell: String = "\(DetailPostsImagesTableViewCell.self)"
+    private let detailPostsTitlesTableViewCell: String = "\(DetailPostsTitlesTableViewCell.self)"
+    private let detailPostsBodiesShortedTableViewCell: String = "\(DetailPostsBodiesShortedTableViewCell.self)"
 
     private let numberOfRows = 3
 
@@ -69,7 +69,7 @@ private extension FavoritePostsViewController {
         ])
         tableView.register(UINib(nibName: "\(DetailPostsImagesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsImageTableViewCell.self)")
         tableView.register(UINib(nibName: "\(DetailPostsTitlesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsTitleTableViewCell.self)")
-        tableView.register(UINib(nibName: "\(DetailPostsBodyShortedTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsBodyShortedTableViewCell.self)")
+        tableView.register(UINib(nibName: "\(DetailPostsBodiesShortedTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsBodiesShortedTableViewCell.self)")
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
@@ -93,7 +93,7 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.item {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailedPostImageTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsImagesTableViewCell.self)")
             if let cell = cell as? DetailPostsImagesTableViewCell {
                 let currentPost = postModel.favoritePosts[indexPath.section]
                 cell.imageUrlInString = currentPost.imageUrlInString
@@ -123,14 +123,14 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
             }
             return cell ?? UITableViewCell()
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailedPostTitleTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsTitlesTableViewCell.self)")
             if let cell = cell as? DetailedPostTitleTableViewCell {
                 cell.titleText = postModel.favoritePosts[indexPath.section].title
                 cell.titleDate = postModel.favoritePosts[indexPath.section].dateCreation
             }
             return cell ?? UITableViewCell()
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailedPostBodyShortedTableViewCell.self)")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailPostsBodiesShortedTableViewCell.self)")
             if let cell = cell as? DetailedPostBodyShortedTableViewCell {
                 cell.bodyText = postModel.favoritePosts[indexPath.section].content
             }
