@@ -89,9 +89,9 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
 private extension AllPostsCollectionViewCell {
     func configureCell() {
         postsTextLabel.textColor = .black
-        postsTextLabel.font = .systemFont(ofSize: 14)
+        postsTextLabel.font = .systemFont(ofSize: 12)
 
-        postsImageView.layer.cornerRadius = 14
+        postsImageView.layer.cornerRadius = 12
 
         favoritePostsButtonLabel.tintColor = .white
         isFavorite = false

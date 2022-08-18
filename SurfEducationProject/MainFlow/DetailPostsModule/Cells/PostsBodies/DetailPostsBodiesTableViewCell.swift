@@ -27,7 +27,7 @@ class DetailPostsBodiesTableViewCell: UITableViewCell {
 
     private func configureAppearance() {
         selectionStyle = .none
-        postBodiesText.font = .systemFont(ofSize: 15, weight: .light)
+        postBodiesText.font = .systemFont(ofSize: 12, weight: .light)
         postBodiesText.textColor = .black
     }
 

@@ -7,6 +7,7 @@
 import UIKit
 
 class AuthViewController: UIViewController {
+
     //MARK: - Views
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var loginTextField: UITextField!
@@ -21,7 +22,6 @@ class AuthViewController: UIViewController {
     @IBOutlet weak var passwordBottomLine: UIView!
 
     //MARK: - Properties
-
     //Маска номера телефона
     private let maxNumberCountInPhoneNumberField = 11
     private var regex: NSRegularExpression? {
@@ -33,11 +33,9 @@ class AuthViewController: UIViewController {
             return nil
         }
     }
-
-    //Activity indicator для кнопки Вход
+    //Activity indicator для кнопки Войти
     private var originalButtonText: String = "Вход"
     var activityIndicator: UIActivityIndicatorView!
-
 
     //MARK: - Methods
     @IBAction func loginButtonAction(_ sender: Any) {
@@ -47,7 +45,7 @@ class AuthViewController: UIViewController {
         if passwordTextField.text == "" {
             showEmptyPasswordNotification()
         }
-        if !(loginTextField.text == "" && passwordTextField.text == "") {
+        if !(loginTextField.text == "" || passwordTextField.text == "") {
             showButtonLoading()
             guard let phoneNumber = loginTextField.text else { return }
             let phoneNumberClearedFromMask = clearPhoneNumberFromMask(phoneNumber: phoneNumber)
@@ -70,19 +68,17 @@ class AuthViewController: UIViewController {
                                 guard let `self` = self else { return }
                                 snackbar.showSnackBar(on: self, with: model)
                                 self.hideButtonLoading()
-                                }
+                            }
                         }
                     }
         }
     }
-
     @IBAction func demoButtonAction(_ sender: Any) {
         loginTextField.text = "+7 (987) 654-32-19"
         passwordTextField.text = "qwerty"
     }
 
     //MARK: - View lifecycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
         configureApperance()
@@ -101,7 +97,6 @@ class AuthViewController: UIViewController {
         unsubscribeFromNotificationCenter()
     }
 }
-
 //MARK: - Configure view
 private extension AuthViewController {
     func configureAppearance() {
@@ -135,14 +130,12 @@ extension UITextField {
         self.leftView = paddingView
         self.leftViewMode = .always
     }
-
     func setRightPaddingPoints(_ amount:CGFloat) {
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
         self.rightView = paddingView
         self.rightViewMode = .always
     }
 }
-
 //MARK: - Configuring password field
 extension AuthViewController {
 
@@ -175,7 +168,6 @@ extension AuthViewController: UITextFieldDelegate {
             let maxIndex = number.index(number.startIndex, offsetBy: maxNumberCountInPhoneNumberField)
             number = String(number[number.startIndex..<maxIndex])
         }
-
         if shouldRemoveLastDigit {
             let maxIndex = number.index(number.startIndex, offsetBy: number.count - 1)
             number = String(number[number.startIndex..<maxIndex])
@@ -218,13 +210,13 @@ extension AuthViewController: UITextFieldDelegate {
 //MARK: - Handle empty text fields
 extension AuthViewController {
     func showEmptyLoginNotification() {
-        loginBottomLine.backgroundColor = .red
+        loginBottomLine.backgroundColor = ColorsStorage.red
 
         let loginEmptyNotification = UILabel(frame: CGRect(x: 0, y: 0, width: loginTextField.frame.width, height: 16))
         loginEmptyNotification.textAlignment = .left
         loginEmptyNotification.text = "The field cannot be empty"
-        loginEmptyNotification.font = .systemFont(ofSize: 11)
-        loginEmptyNotification.textColor = .red
+        loginEmptyNotification.font = .systemFont(ofSize: 12)
+        loginEmptyNotification.textColor = ColorsStorage.red
         loginEmptyNotification.tag = 100
         self.view.addSubview(loginEmptyNotification)
         loginEmptyNotification.translatesAutoresizingMaskIntoConstraints = false
@@ -236,14 +228,13 @@ extension AuthViewController {
         passwordConstraint.constant = 40
         self.view.layoutIfNeeded()
     }
-
     func showEmptyPasswordNotification() {
-        passwordBottomLine.backgroundColor = .red
+        passwordBottomLine.backgroundColor = ColorsStorage.red
         let passwordEmptyNotification = UILabel(frame: CGRect(x: 0, y: 0, width: loginTextField.frame.width, height: 16))
         passwordEmptyNotification.textAlignment = .left
         passwordEmptyNotification.text = "The field cannot be empty"
-        passwordEmptyNotification.font = .systemFont(ofSize: 11)
-        passwordEmptyNotification.textColor = .red
+        passwordEmptyNotification.font = .systemFont(ofSize: 12)
+        passwordEmptyNotification.textColor = ColorsStorage.red
         passwordEmptyNotification.tag = 150
         self.view.addSubview(passwordEmptyNotification)
         passwordEmptyNotification.translatesAutoresizingMaskIntoConstraints = false
@@ -269,7 +260,6 @@ extension AuthViewController {
         buttonConstraint.constant = 32
         self.view.layoutIfNeeded()
     }
-
     func textFieldDidBeginEditing(_ textField: UITextField) {
         dismissEmptyFieldsNotidication()
     }
@@ -318,19 +308,15 @@ extension AuthViewController {
 
 //MARK: - Handle keyboard's show-up methods
 extension AuthViewController {
-
     //Скрытие клавиатуры по тапу
     @objc func hideKeyboard() { self.scrollView?.endEditing(true)
     }
-
     func subcribeToNotificationCenter() {
-
         //Подписываемся на два уведомления: одно приходит при появлении клавиатуры. #selector(self.keyboardWasShown) - функция, которая выполняется после получения события.
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWasShown), name: UIResponder.keyboardWillShowNotification, object: nil)
         // Второе — когда она пропадает
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillBeHidden(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
     func unsubscribeFromNotificationCenter() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -347,12 +333,12 @@ extension AuthViewController {
         scrollView?.scrollIndicatorInsets = contentInsets
 
     }
-
     //Когда клавиатура исчезает
     @objc func keyboardWillBeHidden(notification: Notification) {
         // Устанавливаем все Insets в ноль
         let contentInsets = UIEdgeInsets.zero
         scrollView?.contentInset = contentInsets
     }
+
 
 }

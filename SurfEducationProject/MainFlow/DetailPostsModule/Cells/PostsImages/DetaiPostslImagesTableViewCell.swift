@@ -54,7 +54,7 @@ class DetailedPostsImagesTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .none
-        detailPostsImagesViews.layer.cornerRadius = 15
+        detailPostsImagesViews.layer.cornerRadius = 12
         detailPostsImagesViews.contentMode = .scaleAspectFill
     }
 }
