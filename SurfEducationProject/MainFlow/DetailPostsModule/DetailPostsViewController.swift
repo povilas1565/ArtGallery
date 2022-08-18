@@ -11,9 +11,9 @@ class DetailPostsViewController: UIViewController, UIGestureRecognizerDelegate {
 
     //MARK: Constants
     private let backArrowImage: UIImage? = ImagesStorage.backArrow
-    private let detailedPostImageTableViewCell: String = "\(DetailedPostImageTableViewCell.self)"
-    private let detailedPostTitleTableViewCell: String = "\(DetailedPostTitleTableViewCell.self)"
-    private let detailedPostBodyTableViewCell: String = "\(DetailedPostBodyTableViewCell.self)"
+    private let detailPostImageTableViewCell: String = "\(DetailPostImageTableViewCell.self)"
+    private let detailPostTitleTableViewCell: String = "\(DetailPostTitleTableViewCell.self)"
+    private let detailPostBodyTableViewCell: String = "\(DetailPostBodyTableViewCell.self)"
 
     private let numberOfRows = 3
 

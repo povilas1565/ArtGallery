@@ -8,6 +8,16 @@
 import UIKit
 
 class FavoritePostsViewController: UIViewController {
+
+    //MARK: Constants
+    private let searchBar: UIImage? = ImagesStorage.searchBar
+
+    private let detailPostImageTableViewCell: String = "\(DetailPostImageTableViewCell.self)"
+    private let detailPostTitleTableViewCell: String = "\(DetailPostTitleTableViewCell.self)"
+    private let detailPostBodyShortedTableViewCell: String = "\(DetailPostBodyShortedTableViewCell.self)"
+
+    private let numberOfRows = 3
+
     //MARK: - Views
     private let tableView = UITableView()
 
@@ -34,12 +44,12 @@ private extension FavoritePostsViewController {
 
     func configureNavigationBar() {
         navigationItem.title = "Favorites"
-        let searchButton = UIBarButtonItem(image: UIImage(named: "searchBar"),
+        let searchButton = UIBarButtonItem(image: UIImage(image: searchBar),
                 style: .plain,
                 target: self,
                 action: #selector(goToSearchVC(sender:)))
         navigationItem.rightBarButtonItem = searchButton
-        navigationItem.rightBarButtonItem?.tintColor = .black
+        navigationItem.rightBarButtonItem?.tintColor = ColorsStorage.black
     }
     func configureModel() {
         postModel.didPostsUpdated = { [weak self] in
@@ -57,9 +67,9 @@ private extension FavoritePostsViewController {
             tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        tableView.register(UINib(nibName: "\(DetailedPostImageTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailedPostImageTableViewCell.self)")
-        tableView.register(UINib(nibName: "\(DetailedPostTitleTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailedPostTitleTableViewCell.self)")
-        tableView.register(UINib(nibName: "\(DetailedPostBodyShortedTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailedPostBodyShortedTableViewCell.self)")
+        tableView.register(UINib(nibName: "\(DetailPostsImagesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsImageTableViewCell.self)")
+        tableView.register(UINib(nibName: "\(DetailPostsTitlesTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsTitleTableViewCell.self)")
+        tableView.register(UINib(nibName: "\(DetailPostsBodyShortedTableViewCell.self)", bundle: .main), forCellReuseIdentifier: "\(DetailPostsBodyShortedTableViewCell.self)")
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
@@ -69,6 +79,7 @@ private extension FavoritePostsViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
+
 //MARK: - TableView DataSource
 extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -76,14 +87,14 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return numberOfRows
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.item {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "\(DetailedPostImageTableViewCell.self)")
-            if let cell = cell as? DetailedPostImageTableViewCell {
+            if let cell = cell as? DetailPostsImagesTableViewCell {
                 let currentPost = postModel.favoritePosts[indexPath.section]
                 cell.imageUrlInString = currentPost.imageUrlInString
                 cell.isFavorite = currentPost.isFavorite

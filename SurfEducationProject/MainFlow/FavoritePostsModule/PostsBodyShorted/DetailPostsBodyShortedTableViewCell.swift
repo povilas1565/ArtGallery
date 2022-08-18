@@ -6,7 +6,7 @@
 //
 import UIKit
 
-class DetailedPostsBodyShortedTableViewCell: UITableViewCell {
+class DetailPostsBodyShortedTableViewCell: UITableViewCell {
 //MARK: - Views
     @IBOutlet weak var bodyTextShorted: UILabel!
     //MARK: - Properties
