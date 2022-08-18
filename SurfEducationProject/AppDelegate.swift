@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BaseTokenStorage()
     }
 
+    let launchScreenStoryBoard = UIStoryboard(name: "LaunchScreen", bundle: .main)
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
@@ -52,10 +54,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
     func runLaunchScreen() {
-        let launchScreenViewController = UIStoryboard(name: "LaunchScreen", bundle: .main)
+        let launchScreenViewController = launchScreenStoryBoard
                 .instantiateInitialViewController()
-
-        window?.rootViewController = lauchScreenViewController
+        window?.rootViewController = launchScreenViewController
     }
 }
 

@@ -50,7 +50,6 @@ class AuthViewController: UIViewController {
         if !(loginTextField.text == "" && passwordTextField.text == "") {
             showButtonLoading()
             guard let phoneNumber = loginTextField.text else { return }
-            guard let phoneNumber = loginTextField.text else { return }
             let phoneNumberClearedFromMask = clearPhoneNumberFromMask(phoneNumber: phoneNumber)
             guard let password = passwordTextField.text else { return }
             let credentials = AuthRequestModel(phone: phoneNumberClearedFromMask, password: password)
@@ -176,6 +175,7 @@ extension AuthViewController: UITextFieldDelegate {
             let maxIndex = number.index(number.startIndex, offsetBy: maxNumberCountInPhoneNumberField)
             number = String(number[number.startIndex..<maxIndex])
         }
+
         if shouldRemoveLastDigit {
             let maxIndex = number.index(number.startIndex, offsetBy: number.count - 1)
             number = String(number[number.startIndex..<maxIndex])
