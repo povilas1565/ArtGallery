@@ -13,7 +13,7 @@ class DetailPostsViewController: UIViewController, UIGestureRecognizerDelegate {
     private let backArrowImage: UIImage? = ImagesStorage.backArrow
     private let detailPostsImagesTableViewCell: String = "\(DetailPostsImagesTableViewCell.self)"
     private let detailPostsTitlesTableViewCell: String = "\(DetailPostsTitlesTableViewCell.self)"
-    private let detailPostsBodyiesTableViewCell: String = "\(DetailPostsBodiesTableViewCell.self)"
+    private let detailPostsBodiesTableViewCell: String = "\(DetailPostsBodiesTableViewCell.self)"
 
     private let numberOfRows = 3
 
