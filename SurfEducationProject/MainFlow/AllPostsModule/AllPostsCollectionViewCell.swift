@@ -20,7 +20,7 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var postsImageView: UIImageView!
     @IBOutlet private weak var postsTextsLabel: UILabel!
-    @IBOutlet private weak var favoritePostButtonLabel: UIButton!
+    @IBOutlet private weak var favoritePostsButtonLabel: UIButton!
 
 
     //MARK: - Events
@@ -44,6 +44,7 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
             postsTextLabel.text = titlesText
         }
     }
+
     var imageUrlInString: String = "" {
         didSet {
             guard let url = URL(string: imageUrlInString) else {
@@ -52,6 +53,7 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
             postsImageView.loadImage(from: url)
         }
     }
+
     var isFavorite = false {
         didSet {
             favoritePostsButtonLabel.setImage(buttonImage, for: .normal)
@@ -68,13 +70,13 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
             favoritesStorage.addFavorite(favoritePost: self.postTextLabel.text ?? "")
         }
         isFavorite.toggle()
-        print("count:", FavoritesStorage.shared.myFavorites.count)
     }
 
     override func awakeFromNib() {
         super.awakeFromNib()
         configureCell()
     }
+
     override func prepareForReuse() {
         imageUrlInString = ""
         titlesText = ""

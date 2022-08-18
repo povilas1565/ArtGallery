@@ -30,10 +30,6 @@ final class AllPostsModel {
         posts.filter { $0.title.lowercased().contains(searchText.lowercased()) }
     }
 
-    func createMockPosts() {
-        posts = Array(repeating: PostModel.createDefault(), count: 100)
-    }
-
     func loadPosts() {
         pictureService.loadPictures { [weak self] result in
             self?.currentState = .idle
@@ -83,18 +79,10 @@ struct PostModel: Equatable {
 
         self.dateCreation = formatter.string(from: dateCreation)
     }
+
     func createEmptyModel() -> PostModel {
         let emptyModel = PostModel(imageUrlInString: "", title: "", isFavorite: false, content: "", dateCreation: Date())
         return emptyModel
     }
-
-    static func createDefault() -> PostModel {
-        .init(
-                imageUrlInString: "",
-                title: "Самый милый корги",
-                isFavorite: false,
-                content: "Для бариста и посетителей кофеен специальные кружки для кофе — это ещё один способ проконтролировать вкус напитка и приготовить его именно так, как нравится вам. \n \nТеперь, кроме регулировки экстракции, настройки помола, времени заваривания и многого что помогает выделять нужные характеристики кофе, вы сможете выбрать и кружку для кофе в зависимости от сорта.",
-                dateCreation: Date()
-        )
-    }
 }
+

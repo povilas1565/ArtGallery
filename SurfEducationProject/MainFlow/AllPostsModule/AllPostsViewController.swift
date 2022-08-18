@@ -15,14 +15,19 @@ class AllPostsViewController: UIViewController {
         static let hSpaceBetweenItems: CGFloat = 7
         static let vSpaceBetweenItems: CGFloat = 8
     }
-    let fetchPostsErrorVC = PostsLoadErrorViewController()
+
+    private enum ConstantImages {
+        static let searchBar: UIImage? = ImagesStorage.searchBar
+
+    }
+    private let fetchPostsErrorVC = PostsLoadErrorViewController()
+    private let cellProportion: Double = 246/168
+    private let allPostsCollectionViewCell: String = "\(AllPostsCollectionViewCell.self)"
 
     //MARK: - Private properties
-
     private let postModel = AllPostsModel.shared
 
     //MARK: - Views
-
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private weak var allPostsCollectionView: UICollectionView!
 
@@ -34,6 +39,7 @@ class AllPostsViewController: UIViewController {
         configureAppearence()
         configureModel()
     }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         allPostsCollectionView.reloadData()
@@ -42,16 +48,17 @@ class AllPostsViewController: UIViewController {
             self.fetchPostsErrorVC.view.alpha = 0
             self.activityIndicatorView.isHidden = false
         }
+
         if postModel.currentState == .error {
             fetchPostsErrorVC.view.alpha = 1
             configureModel()
         }
+
         configureNavigationBar()
     }
 }
 
 //MARK: - Private methods
-
 private extension AllPostsViewController {
     func configureAppearence() {
         allPostsCollectionView.register(UINib(nibName: "\(AllPostsCollectionViewCell.self)", bundle: .main), forCellWithReuseIdentifier: "\(AllPostsCollectionViewCell.self)")
@@ -68,6 +75,7 @@ private extension AllPostsViewController {
         navigationItem.rightBarButtonItem = searchButton
         navigationItem.rightBarButtonItem?.tintColor = .black
     }
+
     func configureModel() {
         postModel.didPostsFetchErrorHappened = { [weak self] in
             DispatchQueue.main.async {
@@ -82,6 +90,7 @@ private extension AllPostsViewController {
             }
         }
     }
+
     @objc func goToSearchVC(sender: UIBarButtonItem) {
         let vc = SearchPostsViewController()
         self.navigationController?.pushViewController(vc, animated: true)
@@ -104,7 +113,6 @@ private extension AllPostsViewController {
 }
 
 //MARK: - UICollection
-
 extension AllPostsViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return postModel.posts.count
@@ -126,7 +134,7 @@ extension AllPostsViewController: UICollectionViewDataSource, UICollectionViewDe
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemWidth = (view.frame.width - Constants.collectionViewPadding * 2 - Constants.hSpaceBetweenItems) / 2
-        return CGSize(width: itemWidth, height: itemWidth / 168 * 246)
+        return CGSize(width: itemWidth, height: itemWidth * cellProportion)
 
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
