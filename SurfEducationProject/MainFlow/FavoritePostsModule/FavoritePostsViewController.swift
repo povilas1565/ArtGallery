@@ -24,6 +24,9 @@ class FavoritePostsViewController: UIViewController {
     //MARK: - Singleton instances
     private let postModel: AllPostsModel = AllPostsModel.shared
 
+    //MARK: - Public properties
+    static var favoriteTapStatus: Bool = false
+
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +36,10 @@ class FavoritePostsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         configureNavigationBar()
-        tableView.reloadData()
+        if FavoritePostsViewController.favoriteTapStatus {
+            tableView.reloadData()
+            FavoritePostsViewController.favoriteTapStatus = false
+        }
     }
 }
 //MARK: - Private methods
@@ -51,6 +57,7 @@ private extension FavoritePostsViewController {
         navigationItem.rightBarButtonItem = searchButton
         navigationItem.rightBarButtonItem?.tintColor = ColorsStorage.black
     }
+
     func configureModel() {
         postModel.didPostsUpdated = { [weak self] in
             DispatchQueue.main.async {
@@ -67,13 +74,14 @@ private extension FavoritePostsViewController {
             tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        tableView.register(UINib(nibName: detailPostsImagesTableViewCell, bundle: .main), forCellReuseIdentifier: detailPostsImageTableViewCell)
-        tableView.register(UINib(nibName: detailPostsTitlesTableViewCell, bundle: .main), forCellReuseIdentifier: detailPostsTitleTableViewCell)
+        tableView.register(UINib(nibName: detailPostsImagesTableViewCell, bundle: .main), forCellReuseIdentifier: detailPostsImagesTableViewCell)
+        tableView.register(UINib(nibName: detailPostsTitlesTableViewCell, bundle: .main), forCellReuseIdentifier: detailPostsTitlesTableViewCell)
         tableView.register(UINib(nibName: detailPostsBodiesShortedTableViewCell, bundle: .main), forCellReuseIdentifier: detailPostsBodiesShortedTableViewCell)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
     }
+
     @objc func goToSearchVC(sender: UIBarButtonItem) {
         let vc = SearchPostsViewController()
         self.navigationController?.pushViewController(vc, animated: true)
@@ -139,6 +147,7 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
             return UITableViewCell()
         }
     }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = DetailedPostsViewController()
         vc.model = self.postModel.favoritePosts[indexPath.section]
