@@ -27,6 +27,9 @@ class AllPostsViewController: UIViewController {
     //MARK: - Private properties
     private let postModel = AllPostsModel.shared
 
+    //MARK: - Public properties
+    static var favoriteTapStatus: Bool = false
+
     //MARK: - Views
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private weak var allPostsCollectionView: UICollectionView!
@@ -42,7 +45,10 @@ class AllPostsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        allPostsCollectionView.reloadData()
+        if AllPostsViewController.favoriteTapStatus {
+            allPostsCollectionView.reloadData()
+            AllPostsViewController.favoriteTapStatus = false
+        }
         appendStateViewController {
             self.postModel.loadPosts()
             self.fetchPostsErrorVC.view.alpha = 0
@@ -60,7 +66,7 @@ class AllPostsViewController: UIViewController {
 
 //MARK: - Private methods
 private extension AllPostsViewController {
-    func configureAppearence() {
+    func configureAppearance() {
         allPostsCollectionView.register(UINib(nibName: "\(AllPostsCollectionViewCell.self)", bundle: .main), forCellWithReuseIdentifier: "\(AllPostsCollectionViewCell.self)")
         allPostsCollectionView.dataSource = self
         allPostsCollectionView.delegate = self
@@ -68,12 +74,12 @@ private extension AllPostsViewController {
     }
     func configureNavigationBar() {
         navigationItem.title = "Main"
-        let searchButton = UIBarButtonItem(image: UIImage(named: "searchBar"),
+        let searchButton = UIBarButtonItem(image: ConstantImages.searchBar,
                 style: .plain,
                 target: self,
                 action: #selector(goToSearchVC(sender:)))
         navigationItem.rightBarButtonItem = searchButton
-        navigationItem.rightBarButtonItem?.tintColor = .black
+        navigationItem.rightBarButtonItem?.tintColor = ColorsStorage.black
     }
 
     func configureModel() {
@@ -138,11 +144,11 @@ extension AllPostsViewController: UICollectionViewDataSource, UICollectionViewDe
 
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return Constants.vSpaceBetweenItems
+        return ConstantConstraints.vSpaceBetweenItems
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return Constants.hSpaceBetweenItems
+        return ConstantConstraints.hSpaceBetweenItems
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
