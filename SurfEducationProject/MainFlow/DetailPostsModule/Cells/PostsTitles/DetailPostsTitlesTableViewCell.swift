@@ -32,11 +32,11 @@ class DetailedPostsTitlesTableViewCell: UITableViewCell {
         configureApperance()
     }
 
-    private func configureApperance() {
+    private func configureAppearance() {
         selectionStyle = .none
         titlePostTexts.font = .systemFont(ofSize: 16)
         titlePostDates.font = .systemFont(ofSize: 10)
-        titlePostDates.textColor = UIColor(displayP3Red: 0xB3 / 255, green: 0xB3 / 255, blue: 0xB3 / 255, alpha: 1)
+        titlePostDates.textColor = ColorsStorage.lightGray
     }
 
 }
