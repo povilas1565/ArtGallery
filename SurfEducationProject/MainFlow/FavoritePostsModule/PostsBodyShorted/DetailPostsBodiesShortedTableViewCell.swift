@@ -22,7 +22,7 @@ class DetailPostsBodiesShortedTableViewCell: UITableViewCell {
     }
     private func configureAppearance() {
         selectionStyle = .none
-        bodyTextShorted.font = .systemFont(ofSize: 15, weight: .light)
+        bodyTextShorted.font = .systemFont(ofSize: 12, weight: .light)
         bodyTextShorted.textColor = .black
     }
 
