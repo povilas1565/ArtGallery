@@ -143,8 +143,8 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
                 cell.isFavorite = currentPost.isFavorite
                 cell.postTextLabel = currentPost.title
                 cell.didFavoriteTap = { [weak self] in
-                    let alert = UIAlertController(title: "Attention", message: "Are you sure you want to delete from favorites?", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "Yes, exactly", style: UIAlertAction.Style.default, handler: { action in
+                    guard let `self` = self else { return }
+                    appendConfirmingAlertView(for: self, text: self.alertViewText) { action in
                         let favoritesStorage: FavoritesStorage = FavoritesStorage.shared
 
                         if favoritesStorage.isPostFavorite(post: currentPost.title) {
@@ -171,7 +171,7 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
             return cell ?? UITableViewCell()
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: detailPostsBodiesShortedTableViewCell)
-            if let cell = cell as? DetailedPostBodyShortedTableViewCell {
+            if let cell = cell as? DetailPostsBodiesShortedTableViewCell {
                 cell.bodiesText = postModel.favoritePosts[indexPath.section].content
             }
             return cell ?? UITableViewCell()
