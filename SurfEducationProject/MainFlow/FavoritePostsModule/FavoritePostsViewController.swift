@@ -15,27 +15,38 @@ class FavoritePostsViewController: UIViewController {
     private let detailPostsImagesTableViewCell: String = "\(DetailPostsImagesTableViewCell.self)"
     private let detailPostsTitlesTableViewCell: String = "\(DetailPostsTitlesTableViewCell.self)"
     private let detailPostsBodiesShortedTableViewCell: String = "\(DetailPostsBodiesShortedTableViewCell.self)"
-
+    private let alertViewText: String = "Are you sure you want to delete from favourites?"
     private let numberOfRows = 3
 
     //MARK: - Views
     private let tableView = UITableView()
+    private let refreshControl = UIRefreshControl()
+    @IBOutlet private weak var emptyFavoritesNotificationImage: UIImageView!
+    @IBOutlet private weak var emptyFavoritesNotificationText: UILabel!
 
     //MARK: - Singleton instances
     private let postModel: AllPostsModel = AllPostsModel.shared
 
     //MARK: - Public properties
     static var favoriteTapStatus: Bool = false
+    static var successLoadingPostsAfterZeroScreen: Bool = false
 
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureAppearance()
+        configurePullToRefresh()
         configureModel()
+
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         configureNavigationBar()
+        if !(postModel.favoritePosts.isEmpty) && FavoritePostsViewController.successLoadingPostsAfterZeroScreen {
+            nonEmptyFavoritesNotification()
+            tableView.reloadData()
+            FavoritePostsViewController.successLoadingPostsAfterZeroScreen = false
+        }
         if FavoritePostsViewController.favoriteTapStatus {
             tableView.reloadData()
             FavoritePostsViewController.favoriteTapStatus = false
@@ -61,7 +72,10 @@ private extension FavoritePostsViewController {
     func configureModel() {
         postModel.didPostsUpdated = { [weak self] in
             DispatchQueue.main.async {
-                self?.tableView.reloadData()
+                guard let `self` = self else { return }
+                self.tableView.reloadData()
+                self.postModel.favoritePosts.isEmpty ? self.emptyFavoritesNotification() : self.nonEmptyFavoritesNotification()
+
             }
         }
     }
@@ -82,11 +96,32 @@ private extension FavoritePostsViewController {
         tableView.separatorStyle = .none
     }
 
-    @objc func goToSearchVC(sender: UIBarButtonItem) {
-        let vc = SearchPostsViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+    func configurePullToRefresh() {
+        refreshControl.addTarget(self, action: #selector(self.pullToRefresh(_:)), for: .valueChanged)
+        refreshControl.tintColor = ColorsStorage.lightGray
+        refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+        tableView.addSubview(refreshControl)
+    }
+    @objc func pullToRefresh(_ sender: AnyObject) {
+        self.tableView.reloadData()
+        refreshControl.endRefreshing()
+    }
+    func emptyFavoritesNotification() {
+        refreshControl.removeFromSuperview()
+        view.bringSubviewToFront(emptyFavoritesNotificationImage)
+        view.bringSubviewToFront(emptyFavoritesNotificationText)
+        emptyFavoritesNotificationImage.image = ConstantImages.sadSmile
+        emptyFavoritesNotificationText.font = .systemFont(ofSize: 14, weight: .light)
+        emptyFavoritesNotificationText.text = "the favourites are empty"
+    }
+    func nonEmptyFavoritesNotification() {
+        configurePullToRefresh()
+        emptyFavoritesNotificationImage.image = UIImage()
+        emptyFavoritesNotificationText.text = ""
     }
 }
+
+
 
 //MARK: - TableView DataSource
 extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegate {
@@ -118,29 +153,26 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
                             favoritesStorage.addFavorite(favoritePost: currentPost.title)
                         }
                         cell.isFavorite.toggle()
-                        if let favoritePost = self?.postModel.favoritePosts[indexPath.section] {
-                            self?.postModel.favoritePost(for: favoritePost)
-                            self?.tableView.reloadData()
-                        }
-                    }))
-                    alert.addAction(UIAlertAction(title: "No", style: UIAlertAction.Style.cancel, handler: nil))
-                    self?.present(alert, animated: true, completion: nil)
-
-
+                        let favoritePost = self.postModel.favoritePosts[indexPath.section]
+                        self.postModel.favoritePost(for: favoritePost)
+                        self.tableView.reloadData()
+                        self.postModel.favoritePosts.isEmpty ? self.emptyFavoritesNotification() : self.nonEmptyFavoritesNotification()
+                    }
                 }
             }
+
             return cell ?? UITableViewCell()
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: detailPostsTitlesTableViewCell)
             if let cell = cell as? DetailedPostTitleTableViewCell {
-                cell.titleText = postModel.favoritePosts[indexPath.section].title
-                cell.titleDate = postModel.favoritePosts[indexPath.section].dateCreation
+                cell.titlesText = postModel.favoritePosts[indexPath.section].title
+                cell.titlesDate = postModel.favoritePosts[indexPath.section].dateCreation
             }
             return cell ?? UITableViewCell()
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: detailPostsBodiesShortedTableViewCell)
             if let cell = cell as? DetailedPostBodyShortedTableViewCell {
-                cell.bodyText = postModel.favoritePosts[indexPath.section].content
+                cell.bodiesText = postModel.favoritePosts[indexPath.section].content
             }
             return cell ?? UITableViewCell()
         default:
@@ -149,7 +181,7 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = DetailedPostsViewController()
+        let vc = DetailPostsViewController()
         vc.model = self.postModel.favoritePosts[indexPath.section]
         navigationController?.pushViewController(vc, animated: true)
     }
