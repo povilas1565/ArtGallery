@@ -80,7 +80,7 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         imageUrlInString = ""
         titlesText = ""
-        postsImageView.image = UIImage()
+        postsImagesView.image = UIImage()
 
     }
 }
@@ -88,10 +88,10 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
 //MARK: - Private methods
 private extension AllPostsCollectionViewCell {
     func configureCell() {
-        postsTextLabel.textColor = .black
-        postsTextLabel.font = .systemFont(ofSize: 12)
+        postsTextsLabel.textColor = .black
+        postsTextsLabel.font = .systemFont(ofSize: 12)
 
-        postsImageView.layer.cornerRadius = 12
+        postsImagesView.layer.cornerRadius = 12
 
         favoritePostsButtonLabel.tintColor = .white
         isFavorite = false
