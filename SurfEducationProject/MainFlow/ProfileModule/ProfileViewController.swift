@@ -41,18 +41,27 @@ class ProfileViewController: UIViewController {
                                     delegate.window?.rootViewController = navigationAuthViewController
                                 }
                             }
-                    case .failure:
-                        DispatchQueue.main.async {
-                            self?.hideButtonLoading()
-                            let model = SnackbarModel(text: "Couldn't get out")
-                            let snackbar = SnackbarView(model: model)
-                            guard let `self` = self else { return }
-                            snackbar.showSnackBar(on: self, with: model)
+                        case .failure(let error):
+                            DispatchQueue.main.async {
+                                buttonActivityIndicator.hideButtonLoading()
+                                var textForSnackbar = "Failed to logout, try again"
+                                if let currentError = error as? PossibleErrors {
+                                    switch currentError {
+                                    case .noNetworkConnection:
+                                        textForSnackbar = "There is no internet connection\nTry again later"
+                                    default:
+                                        textForSnackbar = "Failed to logout, try again"
+                                    }
+                                }
+
+                                let model = SnackbarModel(text: textForSnackbar)
+                                let snackbar = SnackbarView(model: model)
+                                guard let `self` = self else { return }
+                                snackbar.showSnackBar(on: self, with: model)
+                            }
                         }
                     }
-                }
         })
-    }
     }
     //MARK: - Views lifecycle
     override func viewDidLoad() {
