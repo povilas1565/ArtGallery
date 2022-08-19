@@ -44,7 +44,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="detailPostsImageView" destination="5lJ-JO-jdq" id="bPf-rU-u6Z"/>
+                <outlet property="detailPostsImagesView" destination="5lJ-JO-jdq" id="bPf-rU-u6Z"/>
                 <outlet property="favoriteButtonLabel" destination="JQ5-bj-ofZ" id="Esf-uN-mZC"/>
             </connections>
             <point key="canvasLocation" x="157.97101449275362" y="162.05357142857142"/>
