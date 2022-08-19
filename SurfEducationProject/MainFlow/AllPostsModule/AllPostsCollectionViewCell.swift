@@ -19,8 +19,8 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
     //MARK: - Views
 
     @IBOutlet private weak var postsImageView: UIImageView!
-    @IBOutlet private weak var postsTextsLabel: UILabel!
     @IBOutlet private weak var favoritePostsButtonLabel: UIButton!
+    @IBOutlet weak var postTextLabel: UILabel!
 
 
     //MARK: - Events
