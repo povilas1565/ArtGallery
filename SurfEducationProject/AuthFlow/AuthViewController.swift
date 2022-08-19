@@ -134,6 +134,7 @@ extension AuthViewController {
         passwordTextField.rightViewMode = .always
         showHidePasswordButton.alpha = 0.4
     }
+
     @objc func togglePasswordView(_ sender: Any) {
         passwordTextField.isSecureTextEntry.toggle()
         showHidePasswordButton.isSelected.toggle()
