@@ -46,31 +46,31 @@ struct BaseNetworkTask<AbstractInput: Encodable, AbstractOutput: Decodable>: Net
         do {
             let request = try getRequest(with: input)
 
-            if let cachedResponse = getCachedResponseFromCache(by: request) {
+         // if let cachedResponse = getCachedResponseFromCache(by: request) {
 
-                let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: cachedResponse.data)
+            // let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: cachedResponse.data)
 
-                onResponseWasReceived(.success(mappedModel))
+               // onResponseWasReceived(.success(mappedModel))
                 //return
-            } else {
+           //  } else {
 
-                session.dataTask(with: request) { data, response, error in
-                            if let error = error {
+            session.dataTask(with: request) { data, response, error in
+                        if let error = error {
+                            onResponseWasReceived(.failure(error))
+                        } else if let data = data {
+                            do {
+                                let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: data)
+                                saveResponseToCache(response, cachedData: data, by: request)
+                                onResponseWasReceived(.success(mappedModel))
+                            } catch {
                                 onResponseWasReceived(.failure(error))
-                            } else if let data = data {
-                                do {
-                                    let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: data)
-                                    saveResponseToCache(response, cachedData: data, by: request)
-                                    onResponseWasReceived(.success(mappedModel))
-                                } catch {
-                                    onResponseWasReceived(.failure(error))
-                                }
-                            } else {
-                                onResponseWasReceived(.failure(NetworkTaskError.unknownError))
                             }
+                        } else {
+                            onResponseWasReceived(.failure(NetworkTaskError.unknownError))
                         }
-                        .resume()
-            }
+                    }
+                    .resume()
+            //}
         } catch {
             onResponseWasReceived(.failure(error))
         }
