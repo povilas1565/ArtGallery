@@ -12,24 +12,13 @@ class DetailedPostsTitlesTableViewCell: UITableViewCell {
 
 
     @IBOutlet weak var titlesPostsText: UILabel!
-    @IBOutlet private weak var titlesPostsDate: UILabel!
+    @IBOutlet weak var titlesPostsDate: UILabel!
 
-    //MARK: - Properties
-    var titlesText: String = "" {
-        didSet {
-            titlePostsText.text = titlesText
-        }
-    }
-    var titlesDates: String = "" {
-        didSet {
-            titlePostsDate.text = titlesDate
-        }
-    }
 
     //MARK: - Methods
     override func awakeFromNib() {
         super.awakeFromNib()
-        configureApperance()
+        configureAppearance()
     }
 
     private func configureAppearance() {

@@ -12,17 +12,11 @@ class DetailPostsBodiesTableViewCell: UITableViewCell {
     //MARK: - Views
     @IBOutlet weak var postsBodiesText: UILabel!
 
-    //MARK: - Properties
-    var bodiesText: String = "" {
-        didSet {
-            postBodiesText.text = bodiesText
-        }
-    }
 
     //MARK: - Methods
     override func awakeFromNib() {
         super.awakeFromNib()
-        configureApperance()
+        configureAppearance()
     }
 
     private func configureAppearance() {
