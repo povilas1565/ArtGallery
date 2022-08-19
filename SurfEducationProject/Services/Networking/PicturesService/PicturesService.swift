@@ -7,16 +7,19 @@
 
 import Foundation
 
-struct PicturesService {
+struct PictureResponseModel: Decodable {
 
-    let dataTask = BaseNetworkTask<EmptyModel, [PictureResponseModel]>(
-        inNeedInjectToken: true,
-        method: .get,
-        path: "picture/"
-    )
+    // MARK: - Internal Properties
+    let id: String
+    let title: String
+    let content: String
+    let photoUrl: String
 
-    func loadPictures(_ onResponseWasReceived: @escaping (_ result: Result<[PictureResponseModel], Error>) -> Void) {
-        dataTask.performRequest(onResponseWasReceived)
+    var date: Date {
+        Date(timeIntervalSince1970: publicationDate / 1000)
     }
+
+    // MARK: - Private Properties
+    private let publicationDate: Double
 
 }
