@@ -18,16 +18,15 @@ struct LogoutService {
     func performLogoutRequestAndRemoveToken(_ onResponseWasReceived: @escaping (_ result: Result<LogoutResponseModel, Error>) -> Void
     ) {
         dataTask.performRequest(input: LogoutRequestModel()) { result in
-            if case let .success(responseModel) = result {
+            if case .success(_) = result {
                 do {
                     try dataTask.tokenStorage.removeTokenFromContainer()
                     try dataTask.profileStorage.removeProfile()
+                    onResponseWasReceived(result)
                 } catch {
-
-                    // TODO: - Handle error if token not was received from server
+                    onResponseWasReceived(result)
                 }
             }
-
             onResponseWasReceived(result)
         }
     }
