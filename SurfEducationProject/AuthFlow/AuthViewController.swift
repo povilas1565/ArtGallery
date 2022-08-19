@@ -9,36 +9,20 @@ import UIKit
 class AuthViewController: UIViewController {
 
     //MARK: - Views
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var loginTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet private weak var scrollView: UIScrollView!
+    @IBOutlet private weak var loginTextField: UITextField!
+    @IBOutlet private weak var passwordTextField: UITextField!
 
-    @IBOutlet weak var loginButtonLabel: UIButton!
+    @IBOutlet private weak var loginButtonLabel: UIButton!
     private let showHidePasswordButton = UIButton(type: .custom)
 
-    @IBOutlet weak var passwordConstraint: NSLayoutConstraint!
-    @IBOutlet weak var buttonConstraint: NSLayoutConstraint!
-    @IBOutlet weak var loginBottomLine: UIView!
-    @IBOutlet weak var passwordBottomLine: UIView!
-
-    //MARK: - Properties
-    //Маска номера телефона
-    private let maxNumberCountInPhoneNumberField = 11
-    private var regex: NSRegularExpression? {
-        do {
-            let regexExpression = try NSRegularExpression(pattern: "[\\+\\s-\\(\\)]", options: .caseInsensitive)
-            return regexExpression
-        } catch {
-            print(error)
-            return nil
-        }
-    }
-    //Activity indicator для кнопки Войти
-    private var originalButtonText: String = "Вход"
-    var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var passwordConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var buttonConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var loginBottomLine: UIView!
+    @IBOutlet private weak var passwordBottomLine: UIView!
 
     //MARK: - Methods
-    @IBAction func loginButtonAction(_ sender: Any) {
+    @IBAction private func loginButtonAction(_ sender: Any) {
         if loginTextField.text == "" {
             showEmptyLoginNotification()
         }
@@ -73,7 +57,8 @@ class AuthViewController: UIViewController {
                     }
         }
     }
-    @IBAction func demoButtonAction(_ sender: Any) {
+
+    @IBAction private func demoButtonAction(_ sender: Any) {
         loginTextField.text = "+7 (987) 654-32-19"
         passwordTextField.text = "qwerty"
     }
@@ -97,6 +82,7 @@ class AuthViewController: UIViewController {
         unsubscribeFromNotificationCenter()
     }
 }
+
 //MARK: - Configure view
 private extension AuthViewController {
     func configureAppearance() {
@@ -157,55 +143,16 @@ extension AuthViewController {
 
 // MARK: - Handle entering a phone number
 extension AuthViewController: UITextFieldDelegate {
-    private func format(phoneNumber: String, shouldRemoveLastDigit: Bool) -> String {
-        let range = NSString(string: phoneNumber).range(of: phoneNumber)
-        guard let regex = regex else { return "\(phoneNumber)" }
-        guard !(shouldRemoveLastDigit && phoneNumber.count <= 2 && phoneNumber.count >= 1) else { return "" }
-
-        var number = regex.stringByReplacingMatches(in: phoneNumber, options: [], range: range, withTemplate: "")
-
-        if number.count > maxNumberCountInPhoneNumberField {
-            let maxIndex = number.index(number.startIndex, offsetBy: maxNumberCountInPhoneNumberField)
-            number = String(number[number.startIndex..<maxIndex])
-        }
-        if shouldRemoveLastDigit {
-            let maxIndex = number.index(number.startIndex, offsetBy: number.count - 1)
-            number = String(number[number.startIndex..<maxIndex])
-        }
-
-        let maxIndex = number.index(number.startIndex, offsetBy: number.count)
-        let regRange = number.startIndex..<maxIndex
-
-        if number.count <= 4 {
-            let pattern = "(\\d)(\\d+)"
-            number = number.replacingOccurrences(of: pattern, with: "$1 ($2)", options: .regularExpression, range: regRange)
-        } else if number.count <= 7 {
-            let pattern = "(\\d)(\\d{3})(\\d+)"
-            number = number.replacingOccurrences(of: pattern, with: "$1 ($2) $3", options: .regularExpression, range: regRange)
-        } else if number.count < 10 {
-            let pattern = "(\\d)(\\d{3})(\\d{3})(\\d+)"
-            number = number.replacingOccurrences(of: pattern, with: "$1 ($2) $3-$4", options: .regularExpression, range: regRange)
-        } else {
-            let pattern = "(\\d)(\\d{3})(\\d{3})(\\d{2})(\\d+)"
-            number = number.replacingOccurrences(of: pattern, with: "$1 ($2) $3-$4-$5", options: .regularExpression, range: regRange)
-        }
-        return "+" + number
-    }
-
-    func clearPhoneNumberFromMask(phoneNumber: String) -> String {
-        let phoneNumberClearedFromSymbols = phoneNumber.replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: " ", with: "")
-        return phoneNumberClearedFromSymbols
-    }
-
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let fullString = (textField.text ?? "") + string
         if textField == loginTextField {
-            textField.text = format(phoneNumber: fullString, shouldRemoveLastDigit: range.length == 1)
+            textField.text = applyPhoneMask(phoneNumber: fullString, shouldRemoveLastDigit: range.length == 1)
             return false
         }
         return true
     }
 }
+
 
 //MARK: - Handle empty text fields
 extension AuthViewController {
@@ -265,46 +212,6 @@ extension AuthViewController {
     }
 }
 
-//MARK: - Adding activity indicator to Button after tap
-extension AuthViewController {
-    func showButtonLoading() {
-        loginButtonLabel.setTitle("", for: .normal)
-
-        if (activityIndicator == nil) {
-            activityIndicator = createActivityIndicator()
-        }
-
-        showSpinning()
-    }
-
-    func hideButtonLoading() {
-        loginButtonLabel.setTitle(originalButtonText, for: .normal)
-        activityIndicator.stopAnimating()
-    }
-
-    private func createActivityIndicator() -> UIActivityIndicatorView {
-        let activityIndicator = UIActivityIndicatorView()
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = .lightGray
-        return activityIndicator
-    }
-
-    private func showSpinning() {
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        loginButtonLabel.addSubview(activityIndicator)
-        centerActivityIndicatorInButton()
-        activityIndicator.startAnimating()
-    }
-
-    private func centerActivityIndicatorInButton() {
-        guard loginButtonLabel != nil else { return }
-        let xCenterConstraint = NSLayoutConstraint(item: loginButtonLabel!, attribute: .centerX, relatedBy: .equal, toItem: activityIndicator, attribute: .centerX, multiplier: 1, constant: 0)
-        loginButtonLabel.addConstraint(xCenterConstraint)
-
-        let yCenterConstraint = NSLayoutConstraint(item: loginButtonLabel!, attribute: .centerY, relatedBy: .equal, toItem: activityIndicator, attribute: .centerY, multiplier: 1, constant: 0)
-        loginButtonLabel.addConstraint(yCenterConstraint)
-    }
-}
 
 //MARK: - Handle keyboard's show-up methods
 extension AuthViewController {
