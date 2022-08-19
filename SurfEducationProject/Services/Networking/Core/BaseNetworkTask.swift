@@ -56,23 +56,52 @@ struct BaseNetworkTask<AbstractInput: Encodable, AbstractOutput: Decodable>: Net
 
             session.dataTask(with: request) { data, response, error in
                         if let error = error {
-                            onResponseWasReceived(.failure(error))
-                        } else if let data = data {
-                            do {
-                                let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: data)
-                                saveResponseToCache(response, cachedData: data, by: request)
-                                onResponseWasReceived(.success(mappedModel))
-                            } catch {
-                                onResponseWasReceived(.failure(error))
+                            if error.localizedDescription == "The Internet connection appears to be offline." {
+                                onResponseWasReceived(.failure(PossibleErrors.noNetworkConnection))
+                            } else {
+                                onResponseWasReceived(.failure(PossibleErrors.unknownError))
                             }
+
+                        } else if let data = data {
+                            if let httpResponse = response as? HTTPURLResponse {
+                                switch httpResponse.statusCode {
+                                case 200:
+                                    do {
+                                        let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: data)
+                                        saveResponseToCache(response, cachedData: data, by: request)
+                                        onResponseWasReceived(.success(mappedModel))
+                                    } catch {
+                                        onResponseWasReceived(.failure(PossibleErrors.unknownError))
+                                    }
+                                case 401:
+                                    do {
+                                        let mappedModel = try JSONDecoder().decode(AbstractOutput.self, from: data)
+                                        saveResponseToCache(response, cachedData: data, by: request)
+                                        onResponseWasReceived(.success(mappedModel))
+                                    } catch {
+                                        onResponseWasReceived(.failure(PossibleErrors.unknownError))
+                                    }
+                                case 400:
+                                    do {
+                                        if let badRequest = try JSONSerialization.jsonObject(with: data) as? [String:String] {
+                                            onResponseWasReceived(.failure(PossibleErrors.badRequest(badRequest)))
+                                        }
+                                    } catch {
+                                        onResponseWasReceived(.failure(PossibleErrors.unknownError))
+                                    }
+                                default:
+                                    onResponseWasReceived(.failure(PossibleErrors.unknownServerError))
+                                }
+                            }
+
                         } else {
-                            onResponseWasReceived(.failure(NetworkTaskError.unknownError))
+                            onResponseWasReceived(.failure(PossibleErrors.unknownError))
                         }
                     }
                     .resume()
             //}
         } catch {
-            onResponseWasReceived(.failure(error))
+            onResponseWasReceived(.failure(PossibleErrors.unknownError))
         }
     }
 
@@ -107,16 +136,9 @@ private extension BaseNetworkTask {
 // MARK: - Private Methods
 private extension BaseNetworkTask {
 
-    enum NetworkTaskError: Error {
-        case unknownError
-        case urlWasNotFound
-        case urlComponentWasNotCreated
-        case parametersIsNotValidJsonObject
-    }
-
     func getRequest(with parameters: AbstractInput) throws -> URLRequest {
         guard let url = completedURL else {
-            throw NetworkTaskError.urlWasNotFound
+            throw PossibleErrors.urlWasNotFound
         }
 
         var request: URLRequest
@@ -144,14 +166,14 @@ private extension BaseNetworkTask {
 
     func getUrlWithQueryParameters(for url: URL, parameters: AbstractInput) throws -> URL {
         guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            throw NetworkTaskError.urlComponentWasNotCreated
+            throw PossibleErrors.urlComponentWasNotCreated
         }
 
         let parametersInDataRepresentation = try JSONEncoder().encode(parameters)
         let parametersInDictionaryRepresentation = try JSONSerialization.jsonObject(with: parametersInDataRepresentation)
 
         guard let parametersInDictionaryRepresentation = parametersInDictionaryRepresentation as? [String: Any] else {
-            throw NetworkTaskError.parametersIsNotValidJsonObject
+            throw PossibleErrors.parametersIsNotValidJsonObject
         }
 
         let queryItems = parametersInDictionaryRepresentation.map { key, value in
@@ -163,7 +185,7 @@ private extension BaseNetworkTask {
         }
 
         guard let newUrlWithQuery = urlComponents.url else {
-            throw NetworkTaskError.urlWasNotFound
+            throw PossibleErrors.urlWasNotFound
         }
 
         return newUrlWithQuery

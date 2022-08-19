@@ -26,11 +26,14 @@ struct AuthService {
                     try dataTask.profileStorage.set(profile: responseModel.user_info)
                 } catch {
 
-                    // TODO: - Handle error if token not was received from server
+                    onResponseWasReceived(result)
+                } catch {
+                    onResponseWasReceived(result)
                 }
-            }
-            onResponseWasReceived(result)
+            } else {
+                onResponseWasReceived(result)
         }
     }
 
+}
 }
