@@ -26,25 +26,16 @@ class SearchPostsViewController: UIViewController, UIGestureRecognizerDelegate {
 
     @IBOutlet private weak var searchUserNotificationsImage: UIImageView!
     @IBOutlet private weak var searchUserNotificationsText: UILabel!
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet private weak var collectionView: UICollectionView!
     private var searchBar: UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 303, height: 32))
 
     //MARK: - Properties
-    var notifyImages: UIImages? {
-        didSet {
-            searchUserNotificationsImage.image = notifyImage
-        }
-    }
-    var notifyTexts: String = "" {
-        didSet {
-            searchUserNotificationText.text = notifyText
-        }
-    }
-    var posts = AllPostsModel.shared.filteredPosts(searchText: "")
+
+    private var posts = AllPostsModel.shared.filteredPosts(searchText: "")
 
     //MARK: - Methods
-    func configureApperance() {
-        searchUserNotificationsText.font = .systemFont(ofSize: 17, weight: .light)
+    private func configureAppearance() {
+        searchUserNotificationsText.font = .systemFont(ofSize: 14, weight: .light)
         notifyImage = UIImage(named: "searchLens")
         searchUserNotificationsText.text = "Enter your request"
         searchBar.delegate = self
@@ -54,7 +45,7 @@ class SearchPostsViewController: UIViewController, UIGestureRecognizerDelegate {
         collectionView.contentInset = .init(top: 10, left: 16, bottom: 10, right: 16)
     }
 
-    func configureNavigationBar() {
+    private func configureNavigationBar() {
         let backButton = UIBarButtonItem(image: UIImage(image: ConstantImages.backArrow),
                 style: .plain,
                 target: navigationController,
@@ -70,7 +61,8 @@ class SearchPostsViewController: UIViewController, UIGestureRecognizerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureApperance()
+        configureAppearance()
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
