@@ -9,38 +9,38 @@ import UIKit
 class ProfileViewController: UIViewController {
 
     //MARK: - Constants
-    let profileMainInfoCell: String = "\(ProfileMainInfoCell.self)"
-    let contactsCell: String = "\(ContactsCell.self)"
-    let numberOfRows = 4
-    let mainInfoCellHeight: CGFloat = 160
-    let contactsCellHeight: CGFloat = 72
+    private let profileMainInfoCell: String = "\(ProfileMainInfoCell.self)"
+    private let contactsCell: String = "\(ContactsCell.self)"
+    private let numberOfRows = 4
+    private let mainInfoCellHeight: CGFloat = 160
+    private let contactsCellHeight: CGFloat = 72
 
     //MARK: - Views
-    @IBOutlet weak var logoutButtonLabel: UIButton!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet private weak var logoutButtonLabel: UIButton!
+    @IBOutlet private weak var tableView: UITableView!
 
     //MARK: - Model
-    var profileModel: ProfileModel = ProfileInstance.shared.profileModel
+    private var profileModel: ProfileModel = ProfileInstance.shared.profileModel
 
-    //MARK: - Properties
-    //Activity indicator для кнопки Войти
-    private var originalButtonText: String = "Выход"
-    var activityIndicator: UIActivityIndicatorView!
 
     //MARK: - Actions
     @IBAction func logoutButtonAction(_ sender: Any) {
         showButtonLoading()
         LogoutService()
-                .performLogoutRequestAndRemoveToken() { [weak self] result in
-                    switch result {
-                    case .success:
-                        DispatchQueue.main.async {
-                            if let delegate = UIApplication.shared.delegate as? AppDelegate {
-                                let authViewController = AuthViewController()
-                                let navigationAuthViewController = UINavigationController(rootViewController: authViewController)
-                                delegate.window?.rootViewController = navigationAuthViewController
+        appendConfirmingAlertView(for: self, text: "Are you sure you want to exit the app?", completion: { action in
+            let buttonActivityIndicator = ButtonActivityIndicator(button: self.logoutButtonLabel, originalButtonText: "Выйти")
+            buttonActivityIndicator.showButtonLoading()
+            LogoutService()
+                    .performLogoutRequestAndRemoveToken() { [weak self] result in
+                        switch result {
+                        case .success:
+                            DispatchQueue.main.async {
+                                if let delegate = UIApplication.shared.delegate as? AppDelegate {
+                                    let authViewController = AuthViewController()
+                                    let navigationAuthViewController = UINavigationController(rootViewController: authViewController)
+                                    delegate.window?.rootViewController = navigationAuthViewController
+                                }
                             }
-                        }
                     case .failure:
                         DispatchQueue.main.async {
                             self?.hideButtonLoading()
@@ -51,8 +51,9 @@ class ProfileViewController: UIViewController {
                         }
                     }
                 }
+        })
     }
-
+    }
     //MARK: - Views lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,7 +65,7 @@ class ProfileViewController: UIViewController {
     }
 
     //MARK: - Methods
-    func configureNavigationBar() {
+   private func configureNavigationBar() {
         navigationItem.title = "Profile"
     }
     func configureTableView() {
@@ -123,45 +124,4 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-}
-
-//MARK: - Adding activity indicator to Button after tap
-extension ProfileViewController {
-    func showButtonLoading() {
-        logoutButtonLabel.setTitle("", for: .normal)
-
-        if (activityIndicator == nil) {
-            activityIndicator = createActivityIndicator()
-        }
-
-        showSpinning()
-    }
-
-    func hideButtonLoading() {
-        logoutButtonLabel.setTitle(originalButtonText, for: .normal)
-        activityIndicator.stopAnimating()
-    }
-
-    private func createActivityIndicator() -> UIActivityIndicatorView {
-        let activityIndicator = UIActivityIndicatorView()
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = .lightGray
-        return activityIndicator
-    }
-
-    private func showSpinning() {
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        logoutButtonLabel.addSubview(activityIndicator)
-        centerActivityIndicatorInButton()
-        activityIndicator.startAnimating()
-    }
-
-    private func centerActivityIndicatorInButton() {
-        guard logoutButtonLabel != nil else { return }
-        let xCenterConstraint = NSLayoutConstraint(item: logoutButtonLabel!, attribute: .centerX, relatedBy: .equal, toItem: activityIndicator, attribute: .centerX, multiplier: 1, constant: 0)
-        logoutButtonLabel.addConstraint(xCenterConstraint)
-
-        let yCenterConstraint = NSLayoutConstraint(item: logoutButtonLabel!, attribute: .centerY, relatedBy: .equal, toItem: activityIndicator, attribute: .centerY, multiplier: 1, constant: 0)
-        logoutButtonLabel.addConstraint(yCenterConstraint)
-    }
 }
