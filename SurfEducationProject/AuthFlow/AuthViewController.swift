@@ -30,7 +30,8 @@ class AuthViewController: UIViewController {
             showEmptyPasswordNotification()
         }
         if !(loginTextField.text == "" || passwordTextField.text == "") {
-            showButtonLoading()
+            let buttonActivityIndicator = ButtonActivityIndicator(button: loginButtonLabel, originalButtonText: "Войти")
+            buttonActivityIndicator.showButtonLoading()
             guard let phoneNumber = loginTextField.text else { return }
             let phoneNumberClearedFromMask = clearPhoneNumberFromMask(phoneNumber: phoneNumber)
             guard let password = passwordTextField.text else { return }
@@ -45,21 +46,34 @@ class AuthViewController: UIViewController {
                                     delegate.window?.rootViewController = mainViewController
                                 }
                             }
-                        case .failure:
+                        case .failure (let error):
                             DispatchQueue.main.async {
-                                let model = SnackbarModel(text: "Login or password entered incorrectly")
+                                var snackbarText = "Что-то пошло не так"
+
+                                if let currentError = error as? PossibleErrors {
+                                    switch currentError {
+                                    case .badRequest(let response):
+                                        if response["message"] == "Неверный логин/пароль" {
+                                            snackbarText = "Логин или пароль введен неправильно"
+                                        }
+                                    case .noNetworkConnection:
+                                        snackbarText = "Отсутствует интернет соединение"
+                                    default:
+                                        snackbarText = "Что-то пошло не так"
+                                    }
+                                }
+                                let model = SnackbarModel(text: snackbarText)
                                 let snackbar = SnackbarView(model: model)
                                 guard let `self` = self else { return }
                                 snackbar.showSnackBar(on: self, with: model)
-                                self.hideButtonLoading()
+                                buttonActivityIndicator.hideButtonLoading()
                             }
                         }
                     }
         }
     }
-
     @IBAction private func demoButtonAction(_ sender: Any) {
-        loginTextField.text = "+7 (987) 654-32-19"
+        loginTextField.text = "+7 (987) 654 32 19"
         passwordTextField.text = "qwerty"
     }
 
@@ -82,18 +96,17 @@ class AuthViewController: UIViewController {
         unsubscribeFromNotificationCenter()
     }
 }
-
 //MARK: - Configure view
 private extension AuthViewController {
-    func configureAppearance() {
+    func configureApperance() {
         self.loginTextField.placeholder = "Login"
         self.loginTextField.backgroundColor = ColorsStorage.lightBackgroundGray
         self.loginTextField.clipsToBounds = true
-        self.loginTextField.layer.cornerRadius = 9
+        self.loginTextField.layer.cornerRadius = 10
         self.loginTextField.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         self.loginTextField.delegate = self
         self.loginTextField.keyboardType = .numberPad
-        self.loginTextField.setLeftPaddingPoints(17)
+        self.loginTextField.setLeftPaddingPoints(18)
 
         self.passwordTextField.placeholder = "Password"
         self.passwordTextField.backgroundColor = ColorsStorage.lightBackgroundGray
@@ -123,7 +136,7 @@ extension UITextField {
     }
 }
 //MARK: - Configuring password field
-extension AuthViewController {
+private extension AuthViewController {
 
     func enablePasswordToggle(){
         showHidePasswordButton.setImage(ImagesStorage.passwordIsHiddenIcon, for: .normal)
@@ -143,6 +156,7 @@ extension AuthViewController {
 
 // MARK: - Handle entering a phone number
 extension AuthViewController: UITextFieldDelegate {
+
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let fullString = (textField.text ?? "") + string
         if textField == loginTextField {
@@ -153,7 +167,6 @@ extension AuthViewController: UITextFieldDelegate {
     }
 }
 
-
 //MARK: - Handle empty text fields
 extension AuthViewController {
     func showEmptyLoginNotification() {
@@ -161,7 +174,7 @@ extension AuthViewController {
 
         let loginEmptyNotification = UILabel(frame: CGRect(x: 0, y: 0, width: loginTextField.frame.width, height: 16))
         loginEmptyNotification.textAlignment = .left
-        loginEmptyNotification.text = "The field cannot be empty"
+        loginEmptyNotification.text = "The field can't be empty"
         loginEmptyNotification.font = .systemFont(ofSize: 12)
         loginEmptyNotification.textColor = ColorsStorage.red
         loginEmptyNotification.tag = 100
@@ -179,7 +192,7 @@ extension AuthViewController {
         passwordBottomLine.backgroundColor = ColorsStorage.red
         let passwordEmptyNotification = UILabel(frame: CGRect(x: 0, y: 0, width: loginTextField.frame.width, height: 16))
         passwordEmptyNotification.textAlignment = .left
-        passwordEmptyNotification.text = "The field cannot be empty"
+        passwordEmptyNotification.text = "The field can't be empty"
         passwordEmptyNotification.font = .systemFont(ofSize: 12)
         passwordEmptyNotification.textColor = ColorsStorage.red
         passwordEmptyNotification.tag = 150
@@ -211,7 +224,6 @@ extension AuthViewController {
         dismissEmptyFieldsNotidication()
     }
 }
-
 
 //MARK: - Handle keyboard's show-up methods
 extension AuthViewController {
