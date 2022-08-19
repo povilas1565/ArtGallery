@@ -57,8 +57,8 @@
             <size key="customSize" width="253" height="375"/>
             <connections>
                 <outlet property="favoritePostsButtonLabel" destination="mBt-0c-2qC" id="0Ei-wX-8OS"/>
-                <outlet property="postsImageView" destination="VoS-3i-Y88" id="pB9-tX-zQA"/>
-                <outlet property="postsTextsLabel" destination="Z2s-mU-ZLx" id="SWQ-Jm-1AB"/>
+                <outlet property="postsImagesView" destination="VoS-3i-Y88" id="pB9-tX-zQA"/>
+                <outlet property="postsTextLabel" destination="Z2s-mU-ZLx" id="SWQ-Jm-1AB"/>
             </connections>
             <point key="canvasLocation" x="186.23188405797103" y="110.82589285714285"/>
         </collectionViewCell>
