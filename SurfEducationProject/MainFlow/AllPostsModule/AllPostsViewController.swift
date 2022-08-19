@@ -31,15 +31,16 @@ class AllPostsViewController: UIViewController {
     static var favoriteTapStatus: Bool = false
 
     //MARK: - Views
-    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private weak var allPostsCollectionView: UICollectionView!
+    private let refreshControl = UIRefreshControl()
 
     //MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         postModel.loadPosts()
-        configureAppearence()
+        configureAppearance()
         configureModel()
     }
 
@@ -67,7 +68,7 @@ class AllPostsViewController: UIViewController {
 //MARK: - Private methods
 private extension AllPostsViewController {
     func configureAppearance() {
-        allPostsCollectionView.register(UINib(nibName: "\(AllPostsCollectionViewCell.self)", bundle: .main), forCellWithReuseIdentifier: "\(AllPostsCollectionViewCell.self)")
+        allPostsCollectionView.register(UINib(nibName: allPostsCollectionViewCell, bundle: .main), forCellWithReuseIdentifier: allPostsCollectionViewCell)
         allPostsCollectionView.dataSource = self
         allPostsCollectionView.delegate = self
         allPostsCollectionView.contentInset = .init(top: 10, left: 16, bottom: 10, right: 16)
@@ -85,21 +86,44 @@ private extension AllPostsViewController {
     func configureModel() {
         postModel.didPostsFetchErrorHappened = { [weak self] in
             DispatchQueue.main.async {
-                self?.activityIndicatorView.isHidden = true
-                self?.fetchPostsErrorVC.view.alpha = 1
+                guard let `self` = self else { return }
+                if self.postModel.posts.isEmpty {
+                    self.activityIndicatorView.isHidden = true
+                    self.fetchPostsErrorVC.view.alpha = 1
+                } else {
+                    let textForSnackBar = AllPostsModel.errorDescription
+                    let model = SnackbarModel(text: textForSnackBar)
+                    let snackbar = SnackbarView(model: model)
+                    snackbar.showSnackBar(on: self, with: model)
+                }
             }
         }
+
         postModel.didPostsUpdated = { [weak self] in
             DispatchQueue.main.async {
                 self?.activityIndicatorView.isHidden = true
                 self?.allPostsCollectionView.reloadData()
+                FavoritePostsViewController.successLoadingPostsAfterZeroScreen = true
             }
         }
     }
 
+    func configurePullToRefresh() {
+        refreshControl.addTarget(self, action: #selector(self.pullToRefresh(_:)), for: .valueChanged)
+        refreshControl.tintColor = ColorsStorage.lightGray
+        refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+        allPostsCollectionView.addSubview(refreshControl)
+
+        }
+
     @objc func goToSearchVC(sender: UIBarButtonItem) {
         let vc = SearchPostsViewController()
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    @objc func pullToRefresh(_ sender: AnyObject) {
+        self.postModel.loadPosts()
+        refreshControl.endRefreshing()
     }
 
     func appendStateViewController(refreshButtonAction: @escaping ()->Void) {
@@ -128,7 +152,7 @@ extension AllPostsViewController: UICollectionViewDataSource, UICollectionViewDe
         let cell = allPostsCollectionView.dequeueReusableCell(withReuseIdentifier: "\(AllPostsCollectionViewCell.self)", for: indexPath)
         if let cell = cell as? AllPostsCollectionViewCell {
             self.activityIndicatorView.isHidden = true
-            cell.titleText = postModel.posts[indexPath.item].title
+            cell.poststitlesText = postModel.posts[indexPath.item].title
             cell.isFavorite = postModel.posts[indexPath.item].isFavorite
             cell.imageUrlInString = postModel.posts[indexPath.item].imageUrlInString
             cell.didFavoriteTap = { [weak self] in

@@ -9,6 +9,7 @@ import UIKit
 
 final class AllPostsModel {
     static let shared = AllPostsModel.init()
+    static var errorDescription: String = "Something went wrong"
     enum LoadState {
         case idle
         case success
@@ -48,9 +49,17 @@ final class AllPostsModel {
                 self?.didPostsUpdated?()
 
             case .failure(let error):
+                if let networkError = error as? PossibleErrors {
+                    switch networkError {
+                    case .noNetworkConnection:
+                        AllPostsModel.errorDescription = "There is no internet connection\nTry again later"
+                    default:
+                        AllPostsModel.errorDescription = "Something went wrong"
+                    }
+                }
+
                 self?.currentState = .error
                 self?.didPostsFetchErrorHappened?()
-                print(error)
             }
         }
     }
