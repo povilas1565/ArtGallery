@@ -8,10 +8,10 @@ import UIKit
 
 class ProfileMainInfoCell: UITableViewCell {
     //MARK: - Views
-    @IBOutlet weak var profileImageView: UIImageView!
-    @IBOutlet weak var profileFirstNameLabel: UILabel!
-    @IBOutlet weak var profileLastNameLabel: UILabel!
-    @IBOutlet weak var profileQuoteLabel: UILabel!
+    @IBOutlet private weak var profileImageView: UIImageView!
+    @IBOutlet private weak var profileFirstNameLabel: UILabel!
+    @IBOutlet private weak var profileLastNameLabel: UILabel!
+    @IBOutlet private weak var profileQuoteLabel: UILabel!
 
     //MARK: - Properties
     var imageUrlInString: String = "" {
