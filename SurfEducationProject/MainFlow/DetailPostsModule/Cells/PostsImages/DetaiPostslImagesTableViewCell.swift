@@ -7,7 +7,7 @@
 //
 import UIKit
 
-class DetailedPostsImagesTableViewCell: UITableViewCell {
+class DetailPostsImagesTableViewCell: UITableViewCell {
 
     //MARK: - Constants
     private enum Constants {
@@ -20,11 +20,10 @@ class DetailedPostsImagesTableViewCell: UITableViewCell {
     //MARK: - Views
 
     @IBOutlet private weak var detailPostsImagesView: UIImageView!
-    @IBOutlet weak var favoriteButtonLabel: UIButton!
+    @IBOutlet private weak var favoriteButtonLabel: UIButton!
 
 
-    //MARK: - Events // Реализуется позже
-
+    //MARK: - Events
     var didFavoriteTap: (() -> Void)?
     @IBAction func favoriteButtonAction(_ sender: Any) {
         didFavoriteTap?()
@@ -41,7 +40,7 @@ class DetailedPostsImagesTableViewCell: UITableViewCell {
             guard let url = URL(string: imageUrlInString) else {
                 return
             }
-            detailedPostImageView?.loadImage(from: url)
+            detailPostsImagesView?.loadImage(from: url)
         }
     }
     var isFavorite = false {
@@ -56,5 +55,9 @@ class DetailedPostsImagesTableViewCell: UITableViewCell {
         selectionStyle = .none
         detailPostsImagesViews.layer.cornerRadius = 12
         detailPostsImagesViews.contentMode = .scaleAspectFill
+    }
+
+    override func prepareForReuse() {
+        detailPostsImagesView.image = UIImage()
     }
 }
