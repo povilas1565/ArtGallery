@@ -141,7 +141,7 @@ extension FavoritePostsViewController: UITableViewDataSource, UITableViewDelegat
                 let currentPost = postModel.favoritePosts[indexPath.section]
                 cell.imageUrlInString = currentPost.imageUrlInString
                 cell.isFavorite = currentPost.isFavorite
-                cell.postTextLabel = currentPost.title
+                cell.postsTextLabel = currentPost.title
                 cell.didFavoriteTap = { [weak self] in
                     guard let `self` = self else { return }
                     appendConfirmingAlertView(for: self, text: self.alertViewText) { action in
