@@ -64,10 +64,10 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
 
     @IBAction func favoritePostsButtonAction(_ sender: UIButton) {
         didFavoriteTap?()
-        if favoritesStorage.isPostsFavorite(post: self.postTextLabel.text ?? "") {
-            favoritesStorage.removeFavorite(favoritePost: self.postTextLabel.text ?? "")
+        if favoritesStorage.isPostsFavorite(post: self.postsTextLabel.text ?? "") {
+            favoritesStorage.removeFavorite(favoritePost: self.postsTextLabel.text ?? "")
         } else {
-            favoritesStorage.addFavorite(favoritePost: self.postTextLabel.text ?? "")
+            favoritesStorage.addFavorite(favoritePost: self.postsTextLabel.text ?? "")
         }
         isFavorite.toggle()
     }
@@ -88,10 +88,10 @@ class AllPostsCollectionViewCell: UICollectionViewCell {
 //MARK: - Private methods
 private extension AllPostsCollectionViewCell {
     func configureCell() {
-        postsTextsLabel.textColor = .black
-        postsTextsLabel.font = .systemFont(ofSize: 12)
+        postsTextLabel.textColor = .black
+        postsTextLabel.font = .systemFont(ofSize: 12)
 
-        postsImagesView.layer.cornerRadius = 12
+        postsImageView.layer.cornerRadius = 12
 
         favoritePostsButtonLabel.tintColor = .white
         isFavorite = false
