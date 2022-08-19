@@ -9,6 +9,7 @@ import Foundation
 
 //MARK: - Possible errors
 enum PossibleErrors: Error {
+
     case unknownError
     case urlWasNotFound
     case urlComponentWasNotCreated
