@@ -10,7 +10,7 @@ import Foundation
 struct LogoutService {
 
     let dataTask = BaseNetworkTask<EmptyModel, EmptyModel>(
-            inNeedInjectToken: false,
+            inNeedInjectToken: true,
             method: .post,
             path: "auth/logout"
     )
