@@ -1,92 +1,92 @@
 {
   "images" : [
     {
-      "idiom" : "iphone",
+      "idiom" : "20.png",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "idiom" : "iphone",
+      "idiom" : "31.png",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "idiom" : "iphone",
+      "idiom" : "40.png",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "idiom" : "iphone",
+      "idiom" : "52.png",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "idiom" : "iphone",
+      "idiom" : "60.png",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "idiom" : "iphone",
+      "idiom" : "74.png",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "idiom" : "iphone",
+      "idiom" : "80.png",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "idiom" : "iphone",
+      "idiom" : "80-1.png",
       "scale" : "3x",
       "size" : "60x60"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "20-1.png",
       "scale" : "1x",
       "size" : "20x20"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "31-1.png",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "40-1.png",
       "scale" : "1x",
       "size" : "29x29"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "52-1.png",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "52-2.png",
       "scale" : "1x",
       "size" : "40x40"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "60-1.png",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "60-2.png",
       "scale" : "1x",
       "size" : "76x76"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "74-1.png",
       "scale" : "2x",
       "size" : "76x76"
     },
     {
-      "idiom" : "ipad",
+      "idiom" : "80-2.png",
       "scale" : "2x",
       "size" : "83.5x83.5"
     },
     {
-      "idiom" : "ios-marketing",
+      "idiom" : "1024.png",
       "scale" : "1x",
       "size" : "1024x1024"
     }
