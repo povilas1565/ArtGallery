@@ -9,15 +9,15 @@ import Foundation
 
 struct LogoutService {
 
-    let dataTask = BaseNetworkTask<LogoutRequestModel, LogoutResponseModel>(
+    let dataTask = BaseNetworkTask<EmptyModel, EmptyModel>(
             inNeedInjectToken: false,
             method: .post,
             path: "auth/logout"
     )
 
-    func performLogoutRequestAndRemoveToken(_ onResponseWasReceived: @escaping (_ result: Result<LogoutResponseModel, Error>) -> Void
+    func performLogoutRequestAndRemoveToken(_ onResponseWasReceived: @escaping (_ result: Result<String, Error>) -> Void
     ) {
-        dataTask.performRequest(input: LogoutRequestModel()) { result in
+        dataTask.performRequest(input: EmptyModel()) { result in
             if case .success(_) = result {
                 do {
                     try dataTask.tokenStorage.removeTokenFromContainer()
