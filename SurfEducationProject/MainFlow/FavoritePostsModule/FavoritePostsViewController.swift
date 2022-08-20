@@ -10,7 +10,7 @@ import UIKit
 class FavoritePostsViewController: UIViewController {
 
     //MARK: Constants
-    private let searchBar: UIImage? = ImagesStorage.searchBar
+    private let searchBar: UIImage? = ImageStorage.searchBar
 
     private let detailPostsImagesTableViewCell: String = "\(DetailPostsImagesTableViewCell.self)"
     private let detailPostsTitlesTableViewCell: String = "\(DetailPostsTitlesTableViewCell.self)"
