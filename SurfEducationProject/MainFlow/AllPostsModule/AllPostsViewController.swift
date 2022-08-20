@@ -17,7 +17,7 @@ class AllPostsViewController: UIViewController {
     }
 
     private enum ConstantImages {
-        static let searchBar: UIImage? = ImagesStorage.searchBar
+        static let searchBar: UIImage? = ImageStorage.searchBar
 
     }
     private let fetchPostsErrorVC = PostsLoadErrorViewController()
@@ -56,7 +56,7 @@ class AllPostsViewController: UIViewController {
             self.activityIndicatorView.isHidden = false
         }
 
-        if postModel.currentState == .error {
+        if postModel.currentState == .error && postModel.posts.isEmpty {
             fetchPostsErrorVC.view.alpha = 1
             configureModel()
         }
@@ -90,6 +90,14 @@ private extension AllPostsViewController {
                 if self.postModel.posts.isEmpty {
                     self.activityIndicatorView.isHidden = true
                     self.fetchPostsErrorVC.view.alpha = 1
+                    //Ниже обработка кейса, когда токен обнулили на сервере, но в приложении время его действия не вышло. Пусть будет, иначе возможно зацикливание приложения, которому даже удаление не поможет. Т.к. токен лежит в keyChain.
+                    if AllPostsModel.errorDescription == "Token is not valid" {
+                        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+                            let authViewController = AuthViewController()
+                            let navigationAuthViewController = UINavigationController(rootViewController: authViewController)
+                            delegate.window?.rootViewController = navigationAuthViewController
+                        }
+                    }
                 } else {
                     let textForSnackBar = AllPostsModel.errorDescription
                     let model = SnackbarModel(text: textForSnackBar)
@@ -176,7 +184,7 @@ extension AllPostsViewController: UICollectionViewDataSource, UICollectionViewDe
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let vc = DetailedPostViewController()
+        let vc = DetailPostsViewController()
         vc.model = self.postModel.posts[indexPath.item]
         navigationController?.pushViewController(vc, animated: true)
     }

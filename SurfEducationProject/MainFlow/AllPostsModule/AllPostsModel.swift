@@ -53,6 +53,8 @@ final class AllPostsModel {
                     switch networkError {
                     case .noNetworkConnection:
                         AllPostsModel.errorDescription = "There is no internet connection\nTry again later"
+                    case .nonAuthorizedAccess:
+                        AllPostsModel.errorDescription = "Token is not valid"
                     default:
                         AllPostsModel.errorDescription = "Something went wrong"
                     }
