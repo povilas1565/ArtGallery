@@ -48,18 +48,18 @@ class AuthViewController: UIViewController {
                             }
                         case .failure (let error):
                             DispatchQueue.main.async {
-                                var snackbarText = "Что-то пошло не так"
+                                var snackbarText = "Something went wrong"
 
                                 if let currentError = error as? PossibleErrors {
                                     switch currentError {
                                     case .badRequest(let response):
-                                        if response["message"] == "Неверный логин/пароль" {
-                                            snackbarText = "Логин или пароль введен неправильно"
+                                        if response["message"] == "Incorrect login/password" {
+                                            snackbarText = "Login or password entered incorrectly"
                                         }
                                     case .noNetworkConnection:
-                                        snackbarText = "Отсутствует интернет соединение"
+                                        snackbarText = "There is no internet connection"
                                     default:
-                                        snackbarText = "Что-то пошло не так"
+                                        snackbarText = "Something went wrong"
                                     }
                                 }
                                 let model = SnackbarModel(text: snackbarText)
@@ -139,9 +139,13 @@ extension UITextField {
 private extension AuthViewController {
 
     func enablePasswordToggle(){
-        showHidePasswordButton.setImage(ImagesStorage.passwordIsHiddenIcon, for: .normal)
-        showHidePasswordButton.setImage(ImagesStorage.passwordIsShownIcon, for: .selected)
-        showHidePasswordButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -16, bottom: 0, right: 0)
+        var buttonConfiguration = UIButton.Configuration.filled()
+        buttonConfiguration.baseBackgroundColor = ColorsStorage.clear
+        buttonConfiguration.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: -16, bottom: 0, trailing: 0)
+
+        showHidePasswordButton.configuration = buttonConfiguration
+        showHidePasswordButton.setImage(ImageStorage.passwordIsHiddenIcon, for: .normal)
+        showHidePasswordButton.setImage(ImageStorage.passwordIsShownIcon, for: .selected)
         showHidePasswordButton.addTarget(self, action: #selector(togglePasswordView), for: .touchUpInside)
         passwordTextField.rightView = showHidePasswordButton
         passwordTextField.rightViewMode = .always
