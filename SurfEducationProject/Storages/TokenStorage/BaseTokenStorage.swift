@@ -13,7 +13,7 @@ struct BaseTokenStorage: TokenStorage {
     private enum Constants {
         static let applicationNameInKeyChain = "com.surf.education.project"
         static let tokenKey = "token"
-        static let tokenDatekey = "tokenDate"
+        static let tokenDateKey = "tokenDate"
     }
 
     // MARK: - Private Properties
