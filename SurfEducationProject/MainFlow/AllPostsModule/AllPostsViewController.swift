@@ -34,17 +34,24 @@ class AllPostsViewController: UIViewController {
     //MARK: - Views
     @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private weak var allPostsCollectionView: UICollectionView!
-    @IBOutlet weak var emptyPostsNotificationImage: UIImageView!
-    @IBOutlet weak var emptyPostsNotificationLabel: UILabel!
+    @IBOutlet private weak var emptyPostsNotificationImage: UIImageView!
+    @IBOutlet private weak var emptyPostsNotificationLabel: UILabel!
+    @IBOutlet private weak var zeroScreenButtonLabel: UIButton!
     private let refreshControl = UIRefreshControl()
 
-    //MARK: - Lifecycle
+    //MARK: - Actions
+    @IBAction func zeroScreenButtonAction(_ sender: Any) {
+        postModel.loadPosts()
+    }
 
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         postModel.loadPosts()
         configureAppearance()
         configureModel()
+        configurePullToRefresh()
+        configureZeroStateButton()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -162,16 +169,18 @@ private extension AllPostsViewController {
     }
 
     func emptyPostListNotification() {
-        refreshControl.isUserInteractionEnabled = true
-        //refreshControl.removeFromSuperview()
-        //view.bringSubviewToFront(emptyPostsNotificationImage)
-        //view.bringSubviewToFront(emptyPostsNotificationLabel)
+        configureZeroStateButton()
+        zeroScreenButtonLabel.isHidden = false
         emptyPostsNotificationImage.image = ConstantImages.sadSmile
         emptyPostsNotificationLabel.font = .systemFont(ofSize: 14, weight: .light)
         emptyPostsNotificationLabel.text = "The posts are empty"
+        view.bringSubviewToFront(emptyPostsNotificationImage)
+        view.bringSubviewToFront(emptyPostsNotificationLabel)
+        view.bringSubviewToFront(zeroScreenButtonLabel)
     }
+
     func nonEmptyPostListNotification() {
-        //configurePullToRefresh()
+        zeroScreenButtonLabel.isHidden = true
         emptyPostsNotificationImage.image = UIImage()
         emptyPostsNotificationLabel.text = ""
     }
