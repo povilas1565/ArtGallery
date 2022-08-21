@@ -49,7 +49,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zyo-oR-hOc" userLabel="InternalView">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="293"/>
                             <subviews>
-                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Логин" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sin-jd-j4V">
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Login" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sin-jd-j4V">
                                     <rect key="frame" x="16" y="35" width="382" height="55"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="55" id="HuF-jb-aSN"/>
@@ -58,7 +58,7 @@
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <textInputTraits key="textInputTraits" textContentType="tel"/>
                                 </textField>
-                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Пароль" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NbT-Xe-urh">
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NbT-Xe-urh">
                                     <rect key="frame" x="16" y="107" width="382" height="55"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="55" id="0AM-5a-xxN"/>
@@ -75,7 +75,7 @@
                                     </constraints>
                                     <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain" title="Войти">
+                                    <buttonConfiguration key="configuration" style="plain" title="Вход">
                                         <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
                                     </buttonConfiguration>
                                     <connections>
@@ -102,7 +102,7 @@
                                         <constraint firstAttribute="width" constant="100" id="wHL-lC-7jd"/>
                                     </constraints>
                                     <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain" title="Демо-вход">
+                                    <buttonConfiguration key="configuration" style="plain" title="Demo-вход">
                                         <fontDescription key="titleFontDescription" type="system" weight="light" pointSize="14"/>
                                     </buttonConfiguration>
                                     <connections>
