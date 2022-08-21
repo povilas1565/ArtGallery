@@ -16,19 +16,16 @@ struct ProfileModel: Decodable {
     let city: String
     let about: String
 }
+func getProfileInstance() -> ProfileModel {
 
-struct ProfileInstance {
-    static let shared = ProfileInstance()
-    let profileModel: ProfileModel
-
-    init() {
         let storage = BaseProfileStorage()
         do {
             let profile = try storage.getProfileInfo()
-            self.profileModel = profile
+            return profile
         } catch {
             print(error)
-            self.profileModel = ProfileModel(phone: "+7 (9**) *** ** **", email: "alexandra@surfstudio.ru", firstName: "Александра", lastName: "Новикова", avatar: "", city: "Saint-Petersburg", about: "Что-то пошло не так с загрузкой профиля, но любые проблемы решаемы:)")
+            let profile = ProfileModel(phone: "+7 (9**) *** ** **", email: "alexandra@surfstudio.ru", firstName: "Александра", lastName: "Новикова", avatar: "", city: "Saint-Petersburg", about: "Что-то пошло не так с загрузкой профиля, но любые проблемы решаемы:)")
+            return profile
         }
     }
-}
+
