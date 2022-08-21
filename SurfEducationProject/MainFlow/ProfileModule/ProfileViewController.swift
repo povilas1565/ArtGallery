@@ -28,7 +28,7 @@ class ProfileViewController: UIViewController {
         showButtonLoading()
         LogoutService()
         appendConfirmingAlertView(for: self, text: "Are you sure you want to exit the app?", completion: { action in
-            let buttonActivityIndicator = ButtonActivityIndicator(button: self.logoutButtonLabel, originalButtonText: "Выйти")
+            let buttonActivityIndicator = ButtonActivityIndicator(button: self.logoutButtonLabel, originalButtonText: "Logout")
             buttonActivityIndicator.showButtonLoading()
             LogoutService()
                     .performLogoutRequestAndRemoveToken() { [weak self] result in
