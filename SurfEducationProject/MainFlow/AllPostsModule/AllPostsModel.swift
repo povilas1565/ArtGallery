@@ -31,6 +31,10 @@ final class AllPostsModel {
         posts.filter { $0.title.lowercased().contains(searchText.lowercased()) }
     }
 
+    func removeAllPosts() {
+        posts = []
+    }
+
     func loadPosts() {
         pictureService.loadPictures { [weak self] result in
             self?.currentState = .idle

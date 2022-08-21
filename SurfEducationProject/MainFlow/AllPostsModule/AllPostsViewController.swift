@@ -18,6 +18,7 @@ class AllPostsViewController: UIViewController {
 
     private enum ConstantImages {
         static let searchBar: UIImage? = ImageStorage.searchBar
+        static let sadSmile: UIImage? = ImageStorage.sadSmile
 
     }
     private let fetchPostsErrorVC = PostsLoadErrorViewController()
@@ -33,6 +34,8 @@ class AllPostsViewController: UIViewController {
     //MARK: - Views
     @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private weak var allPostsCollectionView: UICollectionView!
+    @IBOutlet weak var emptyPostsNotificationImage: UIImageView!
+    @IBOutlet weak var emptyPostsNotificationLabel: UILabel!
     private let refreshControl = UIRefreshControl()
 
     //MARK: - Lifecycle
@@ -88,6 +91,7 @@ private extension AllPostsViewController {
             DispatchQueue.main.async {
                 guard let `self` = self else { return }
                 if self.postModel.posts.isEmpty {
+                    self.nonEmptyPostListNotification()
                     self.activityIndicatorView.isHidden = true
                     self.fetchPostsErrorVC.view.alpha = 1
                     //Ниже обработка кейса, когда токен обнулили на сервере, но в приложении время его действия не вышло. Пусть будет, иначе возможно зацикливание приложения, которому даже удаление не поможет. Т.к. токен лежит в keyChain.
@@ -109,9 +113,11 @@ private extension AllPostsViewController {
 
         postModel.didPostsUpdated = { [weak self] in
             DispatchQueue.main.async {
-                self?.activityIndicatorView.isHidden = true
-                self?.allPostsCollectionView.reloadData()
+                guard let `self` = self else { return }
+                self.activityIndicatorView.isHidden = true
+                self.allPostsCollectionView.reloadData()
                 FavoritePostsViewController.successLoadingPostsAfterZeroScreen = true
+                self.postModel.posts.isEmpty ? self.emptyPostListNotification() : self.nonEmptyPostListNotification()
             }
         }
     }
@@ -134,6 +140,13 @@ private extension AllPostsViewController {
         refreshControl.endRefreshing()
     }
 
+    func configureZeroStateButton() {
+        zeroScreenButtonLabel.titleLabel?.text = "Update data"
+        zeroScreenButtonLabel.backgroundColor = ColorsStorage.black
+        zeroScreenButtonLabel.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        zeroScreenButtonLabel.isHidden = true
+    }
+
     func appendStateViewController(refreshButtonAction: @escaping ()->Void) {
         fetchPostsErrorVC.view.translatesAutoresizingMaskIntoConstraints = false
         self.addChild(fetchPostsErrorVC)
@@ -146,6 +159,21 @@ private extension AllPostsViewController {
         fetchPostsErrorVC.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         fetchPostsErrorVC.view.alpha = 0
         fetchPostsErrorVC.refreshButtonAction = refreshButtonAction
+    }
+
+    func emptyPostListNotification() {
+        refreshControl.isUserInteractionEnabled = true
+        //refreshControl.removeFromSuperview()
+        //view.bringSubviewToFront(emptyPostsNotificationImage)
+        //view.bringSubviewToFront(emptyPostsNotificationLabel)
+        emptyPostsNotificationImage.image = ConstantImages.sadSmile
+        emptyPostsNotificationLabel.font = .systemFont(ofSize: 14, weight: .light)
+        emptyPostsNotificationLabel.text = "The posts are empty"
+    }
+    func nonEmptyPostListNotification() {
+        //configurePullToRefresh()
+        emptyPostsNotificationImage.image = UIImage()
+        emptyPostsNotificationLabel.text = ""
     }
 
 }
