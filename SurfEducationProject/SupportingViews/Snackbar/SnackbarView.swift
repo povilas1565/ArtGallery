@@ -93,8 +93,8 @@ class SnackbarView: UIView {
     func addSwipeGesture() {
         let swipeUpGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeUpSnackBar))
         swipeUpGesture.direction = .up
-        self.addGestureRecognizer(swipeUpGesture)
-        self.isUserInteractionEnabled = true
+        viewForSwipeRecognizer.addGestureRecognizer(swipeUpGesture)
+        viewForSwipeRecognizer.isUserInteractionEnabled = true
     }
     @objc func swipeUpSnackBar() {
         snackbarWasSwiped = true
@@ -103,6 +103,7 @@ class SnackbarView: UIView {
         }, completion: { done in
             if done {
                 self.removeFromSuperview()
+                self.viewForSwipeRecognizer.removeFromSuperview()
             }
         })
     }
