@@ -4,7 +4,7 @@
 	classes = {
 	};
 	objectVersion = 55;
-	objects =
+	objects = {
 
 /* Begin PBXBuildFile section */
 		3A1B1B9128AF819D000346D7 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1B1B9028AF819D000346D7 /* AlertView.swift */; };
