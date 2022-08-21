@@ -3,7 +3,7 @@
 //  DetailPostsTitlesTableViewCell.swift
 //  SurfSummerSchoolProject
 //
-//  Created by Антон Голубейков on 06.08.2022.
+//  Created by Павел Рыжков on 06.08.2022.
 //
 import UIKit
 
