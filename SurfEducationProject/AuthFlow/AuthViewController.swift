@@ -30,7 +30,7 @@ class AuthViewController: UIViewController {
             showEmptyPasswordNotification()
         }
         if !(loginTextField.text == "" || passwordTextField.text == "") {
-            let buttonActivityIndicator = ButtonActivityIndicator(button: loginButtonLabel, originalButtonText: "Войти")
+            let buttonActivityIndicator = ButtonActivityIndicator(button: loginButtonLabel, originalButtonText: "Вход")
             buttonActivityIndicator.showButtonLoading()
             guard let phoneNumber = loginTextField.text else { return }
             let phoneNumberClearedFromMask = clearPhoneNumberFromMask(phoneNumber: phoneNumber)
@@ -62,10 +62,10 @@ class AuthViewController: UIViewController {
                                         snackbarText = "Something went wrong"
                                     }
                                 }
-                                let model = SnackbarModel(text: snackbarText)
-                                let snackbar = SnackbarView(model: model)
                                 guard let `self` = self else { return }
-                                snackbar.showSnackBar(on: self, with: model)
+                                let model = SnackbarModel(text: snackbarText)
+                                let snackbar = SnackbarView(model: model, viewController: self)
+                                snackbar.showSnackBar()
                                 buttonActivityIndicator.hideButtonLoading()
                             }
                         }
@@ -98,15 +98,15 @@ class AuthViewController: UIViewController {
 }
 //MARK: - Configure view
 private extension AuthViewController {
-    func configureApperance() {
+    func configureAppearance() {
         self.loginTextField.placeholder = "Login"
         self.loginTextField.backgroundColor = ColorsStorage.lightBackgroundGray
         self.loginTextField.clipsToBounds = true
-        self.loginTextField.layer.cornerRadius = 10
+        self.loginTextField.layer.cornerRadius = 9
         self.loginTextField.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         self.loginTextField.delegate = self
         self.loginTextField.keyboardType = .numberPad
-        self.loginTextField.setLeftPaddingPoints(18)
+        self.loginTextField.setLeftPaddingPoints(17)
 
         self.passwordTextField.placeholder = "Password"
         self.passwordTextField.backgroundColor = ColorsStorage.lightBackgroundGray
